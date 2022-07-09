@@ -8,7 +8,7 @@ use jsonwebtokens as jwt;
 use jwt::{Algorithm, AlgorithmID, encode};
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), reqwest::Error> {
 
   let wxkit_keyid = env::var("WEATHERKIT_KEY_ID").expect("Please set WEATHERKIT_KEY_ID");
   let wxkit_service_id = env::var("WEATHERKIT_SERVICE_ID").expect("Please set WEATHERKIT_SERVICE_ID");
@@ -39,20 +39,25 @@ async fn main() {
     "id": format!("{}.{}", wxkit_teamid.to_owned(), wxkit_service_id.to_owned())
   });
 
-  println!("{}\n{}", claims, header);
+  // println!("{}\n{}", claims, header);
 
   let token = encode(&header, &claims, &alg).expect("Error creating JWT");
 
-  let url = format!("https://weatherkit.apple.com/api/v1/availability/{}/{}?country={}", 43.2, -70.8, "US");
+  let url = format!("https://weatherkit.apple.com/api/v1/weather/{}/{}/{}?timezone=America/New_York&dataSets=currentWeather,forecastDaily,forecastHourly,forecastNextHour,weatherAlerts", "en", 43.2, -70.8);
 
   let client = reqwest::Client::new();
 
   let mut call = client.get(url);
-  call = call.header("Authorization", format!("Bearer {}", token));
+  call = call
+    .header("Authorization", format!("Bearer {}", token))
+    .header("Accept", "application/json");
 
-  let resp = call.send().await;
-  let content = resp.unwrap();
+  let resp = call.send().await?;
 
-  println!("{:?}", content);
+  let body = resp.text().await?;
+
+  println!("{}", body);
+
+  Ok(())
 
 }
