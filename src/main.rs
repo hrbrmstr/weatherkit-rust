@@ -5,7 +5,6 @@ use std::fs::File;
 use std::env;
 use std::collections::HashSet;
 
-use serde::{Serialize, Deserialize};
 use serde_json::json;
 
 use jsonwebtokens as jwt;
@@ -21,647 +20,18 @@ use chrono::prelude::*;
 use chrono::{DateTime, Utc, SecondsFormat};
 use chrono_tz::Tz;
 
-extern crate colored;
+mod weatherkitweather;
+use weatherkitweather::{*};
 
+mod utils;
+use utils::{*};
+
+extern crate colored;
 use colored::{*};
 
 use clap::{Parser};
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct WeatherKitWeather {
-  #[serde(rename = "currentWeather")]
-  pub current_weather: CurrentWeather,
-  
-  #[serde(rename = "forecastDaily")]
-  pub forecast_daily: ForecastDaily,
-  
-  #[serde(rename = "forecastHourly")]
-  pub forecast_hourly: ForecastHourly,
-  
-  #[serde(rename = "forecastNextHour")]
-  pub forecast_next_hour: Option<ForecastNextHour>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct CurrentWeather {
-  #[serde(rename = "name")]
-  pub name: String,
-  
-  #[serde(rename = "metadata")]
-  pub metadata: Metadata,
-  
-  #[serde(rename = "asOf")]
-  pub as_of: String,
-  
-  #[serde(rename = "cloudCover")]
-  pub cloud_cover: f64,
-  
-  #[serde(rename = "conditionCode")]
-  pub condition_code: ConditionCode,
-  
-  #[serde(rename = "daylight")]
-  pub daylight: bool,
-  
-  #[serde(rename = "humidity")]
-  pub humidity: f64,
-  
-  #[serde(rename = "precipitationIntensity")]
-  pub precipitation_intensity: f64,
-  
-  #[serde(rename = "pressure")]
-  pub pressure: f64,
-  
-  #[serde(rename = "pressureTrend")]
-  pub pressure_trend: PressureTrend,
-  
-  #[serde(rename = "temperature")]
-  pub temperature: f64,
-  
-  #[serde(rename = "temperatureApparent")]
-  pub temperature_apparent: f64,
-  
-  #[serde(rename = "temperatureDewPoint")]
-  pub temperature_dew_point: f64,
-  
-  #[serde(rename = "uvIndex")]
-  pub uv_index: f64,
-  
-  #[serde(rename = "visibility")]
-  pub visibility: f64,
-  
-  #[serde(rename = "windDirection")]
-  pub wind_direction: f64,
-  
-  #[serde(rename = "windGust")]
-  pub wind_gust: f64,
-  
-  #[serde(rename = "windSpeed")]
-  pub wind_speed: f64,
-  
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct HourWeatherconditions {
-  
-  #[serde(rename = "cloudCover")]
-  pub cloud_cover: f64,
-  
-  #[serde(rename = "conditionCode")]
-  pub condition_code: ConditionCode,
-  
-  #[serde(rename = "daylight")]
-  pub daylight: bool,
-  
-  #[serde(rename = "humidity")]
-  pub humidity: f64,
-  
-  #[serde(rename = "precipitationIntensity")]
-  pub precipitation_intensity: f64,
-  
-  #[serde(rename = "pressure")]
-  pub pressure: f64,
-  
-  #[serde(rename = "pressureTrend")]
-  pub pressure_trend: PressureTrend,
-  
-  #[serde(rename = "temperature")]
-  pub temperature: f64,
-  
-  #[serde(rename = "temperatureApparent")]
-  pub temperature_apparent: f64,
-  
-  #[serde(rename = "temperatureDewPoint")]
-  pub temperature_dew_point: f64,
-  
-  #[serde(rename = "uvIndex")]
-  pub uv_index: f64,
-  
-  #[serde(rename = "visibility")]
-  pub visibility: f64,
-  
-  #[serde(rename = "windDirection")]
-  pub wind_direction: f64,
-  
-  #[serde(rename = "windGust")]
-  pub wind_gust: f64,
-  
-  #[serde(rename = "windSpeed")]
-  pub wind_speed: f64,
-  
-  #[serde(rename = "forecastStart")]
-  pub forecast_start: String,
-  
-  #[serde(rename = "precipitationAmount")]
-  pub precipitation_amount: f64,
-  
-  #[serde(rename = "precipitationChance")]
-  pub precipitation_chance: f64,
-  
-  #[serde(rename = "precipitationType")]
-  pub precipitation_type: PrecipitationType,
-  
-  #[serde(rename = "snowfallIntensity")]
-  pub snowfall_intensity: f64,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Metadata {
-  #[serde(rename = "attributionURL")]
-  pub attribution_url: String,
-  
-  #[serde(rename = "expireTime")]
-  pub expire_time: String,
-  
-  #[serde(rename = "latitude")]
-  pub latitude: f64,
-  
-  #[serde(rename = "longitude")]
-  pub longitude: f64,
-  
-  #[serde(rename = "readTime")]
-  pub read_time: String,
-  
-  #[serde(rename = "reportedTime")]
-  pub reported_time: Option<String>,
-  
-  #[serde(rename = "units")]
-  pub units: String,
-  
-  #[serde(rename = "version")]
-  pub version: f64,
-  
-  #[serde(rename = "language")]
-  pub language: Option<String>,
-  
-  #[serde(rename = "providerName")]
-  pub provider_name: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ForecastDaily {
-  #[serde(rename = "name")]
-  pub name: String,
-  
-  #[serde(rename = "metadata")]
-  pub metadata: Metadata,
-  
-  #[serde(rename = "days")]
-  pub days: Vec<Day>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Day {
-  #[serde(rename = "forecastStart")]
-  pub forecast_start: String,
-  
-  #[serde(rename = "forecastEnd")]
-  pub forecast_end: String,
-  
-  #[serde(rename = "conditionCode")]
-  pub condition_code: ConditionCode,
-  
-  #[serde(rename = "maxUvIndex")]
-  pub max_uv_index: f64,
-  
-  #[serde(rename = "moonPhase")]
-  pub moon_phase: MoonPhase,
-  
-  #[serde(rename = "moonrise")]
-  pub moonrise: String,
-  
-  #[serde(rename = "moonset")]
-  pub moonset: String,
-  
-  #[serde(rename = "precipitationAmount")]
-  pub precipitation_amount: f64,
-  
-  #[serde(rename = "precipitationChance")]
-  pub precipitation_chance: f64,
-  
-  #[serde(rename = "precipitationType")]
-  pub precipitation_type: PrecipitationType,
-  
-  #[serde(rename = "snowfallAmount")]
-  pub snowfall_amount: f64,
-  
-  #[serde(rename = "solarMidnight")]
-  pub solar_midnight: String,
-  
-  #[serde(rename = "solarNoon")]
-  pub solar_noon: String,
-  
-  #[serde(rename = "sunrise")]
-  pub sunrise: String,
-  
-  #[serde(rename = "sunriseCivil")]
-  pub sunrise_civil: String,
-  
-  #[serde(rename = "sunriseNautical")]
-  pub sunrise_nautical: String,
-  
-  #[serde(rename = "sunriseAstronomical")]
-  pub sunrise_astronomical: String,
-  
-  #[serde(rename = "sunset")]
-  pub sunset: String,
-  
-  #[serde(rename = "sunsetCivil")]
-  pub sunset_civil: String,
-  
-  #[serde(rename = "sunsetNautical")]
-  pub sunset_nautical: String,
-  
-  #[serde(rename = "sunsetAstronomical")]
-  pub sunset_astronomical: String,
-  
-  #[serde(rename = "temperatureMax")]
-  pub temperature_max: f64,
-  
-  #[serde(rename = "temperatureMin")]
-  pub temperature_min: f64,
-  
-  #[serde(rename = "daytimeForecast")]
-  pub daytime_forecast: Forecast,
-  
-  #[serde(rename = "overnightForecast")]
-  pub overnight_forecast: Option<Forecast>,
-  
-  #[serde(rename = "restOfDayForecast")]
-  pub rest_of_day_forecast: Option<Forecast>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Forecast {
-  #[serde(rename = "forecastStart")]
-  pub forecast_start: String,
-  
-  #[serde(rename = "forecastEnd")]
-  pub forecast_end: String,
-  
-  #[serde(rename = "cloudCover")]
-  pub cloud_cover: f64,
-  
-  #[serde(rename = "conditionCode")]
-  pub condition_code: ConditionCode,
-  
-  #[serde(rename = "humidity")]
-  pub humidity: f64,
-  
-  #[serde(rename = "precipitationAmount")]
-  pub precipitation_amount: f64,
-  
-  #[serde(rename = "precipitationChance")]
-  pub precipitation_chance: f64,
-  
-  #[serde(rename = "precipitationType")]
-  pub precipitation_type: PrecipitationType,
-  
-  #[serde(rename = "snowfallAmount")]
-  pub snowfall_amount: f64,
-  
-  #[serde(rename = "windDirection")]
-  pub wind_direction: f64,
-  
-  #[serde(rename = "windSpeed")]
-  pub wind_speed: f64,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ForecastHourly {
-  #[serde(rename = "name")]
-  pub name: String,
-  
-  #[serde(rename = "metadata")]
-  pub metadata: Metadata,
-  
-  #[serde(rename = "hours")]
-  pub hours: Vec<HourWeatherconditions>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ForecastNextHour {
-  #[serde(rename = "name")]
-  pub name: String,
-  
-  #[serde(rename = "metadata")]
-  pub metadata: Metadata,
-  
-  #[serde(rename = "summary")]
-  pub summary: Vec<Minute>,
-  
-  #[serde(rename = "forecastStart")]
-  pub forecast_start: String,
-  
-  #[serde(rename = "forecastEnd")]
-  pub forecast_end: String,
-  
-  #[serde(rename = "minutes")]
-  pub minutes: Vec<Minute>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Minute {
-  #[serde(rename = "startTime")]
-  pub start_time: String,
-  
-  #[serde(rename = "precipitationChance")]
-  pub precipitation_chance: f64,
-  
-  #[serde(rename = "precipitationIntensity")]
-  pub precipitation_intensity: f64,
-  
-  #[serde(rename = "condition")]
-  pub condition: Option<PrecipitationType>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum ConditionCode {
-  #[serde(rename = "Clear")]
-  Clear,
-  
-  #[serde(rename = "Cloudy")]
-  Cloudy,
-  
-  #[serde(rename = "Dust")]
-  Dust,
-  
-  #[serde(rename = "Fog")]
-  Fog,
-  
-  #[serde(rename = "Haze")]
-  Haze,
-  
-  #[serde(rename = "MostlyClear")]
-  MostlyClear,
-  
-  #[serde(rename = "MostlyCloudy")]
-  MostlyCloudy,
-  
-  #[serde(rename = "PartlyCloudy")]
-  PartlyCloudy,
-  
-  #[serde(rename = "ScatteredThunderstorms")]
-  ScatteredThunderstorms,
-  
-  #[serde(rename = "Smoke")]
-  Smoke,
-  
-  #[serde(rename = "Breezy")]
-  Breezy,
-  
-  #[serde(rename = "Windy")]
-  Windy,
-  
-  #[serde(rename = "Drizzle")]
-  Drizzle,
-  
-  #[serde(rename = "HeavyRain")]
-  HeavyRain,
-  
-  #[serde(rename = "Rain")]
-  Rain,
-  
-  #[serde(rename = "Showers")]
-  Showers,
-  
-  #[serde(rename = "Flurries")]
-  Flurries,
-  
-  #[serde(rename = "HeavySnow")]
-  HeavySnow,
-  
-  #[serde(rename = "MixedRainAndSleet")]
-  MixedRainAndSleet,
-  
-  #[serde(rename = "MixedRainAndSnow")]
-  MixedRainAndSnow,
-  
-  #[serde(rename = "MixedRainfall")]
-  MixedRainfall,
-  
-  #[serde(rename = "MixedSnowAndSleet")]
-  MixedSnowAndSleet,
-  
-  #[serde(rename = "ScatteredShowers")]
-  ScatteredShowers,
-  
-  #[serde(rename = "ScatteredSnowShowers")]
-  ScatteredSnowShowers,
-  
-  #[serde(rename = "Sleet")]
-  Sleet,
-  
-  #[serde(rename = "Snow")]
-  Snow,
-  
-  #[serde(rename = "SnowShowers")]
-  SnowShowers,
-  
-  #[serde(rename = "Blizzard")]
-  Blizzard,
-  
-  #[serde(rename = "BlowingSnow")]
-  BlowingSnow,
-  
-  #[serde(rename = "FreezingDrizzle")]
-  FreezingDrizzle,
-  
-  #[serde(rename = "FreezingRain")]
-  FreezingRain,
-  
-  #[serde(rename = "Frigid")]
-  Frigid,
-  
-  #[serde(rename = "Hail")]
-  Hail,
-  
-  #[serde(rename = "Hot")]
-  Hot,
-  
-  #[serde(rename = "Hurricane")]
-  Hurricane,
-  
-  #[serde(rename = "IsolatedThunderstorms")]
-  IsolatedThunderstorms,
-  
-  #[serde(rename = "SevereThunderstorm")]
-  SevereThunderstorm,
-  
-  #[serde(rename = "Thunderstorm")]
-  Thunderstorm,
-  
-  #[serde(rename = "Tornado")]
-  Tornado,
-  
-  #[serde(rename = "TropicalStorm")]
-  TropicalStorm,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum PrecipitationType {
-  #[serde(rename = "clear")]
-  Clear,
-  
-  #[serde(rename = "rain")]
-  Rain,
-  
-  #[serde(rename = "hail")]
-  Hail,
-  
-  #[serde(rename = "mixed")]
-  Mixed,
-  
-  #[serde(rename = "snow")]
-  Snow,
-  
-  #[serde(rename = "sleet")]
-  Sleet,
-  
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum PressureTrend {
-  #[serde(rename = "falling")]
-  Falling,
-  
-  #[serde(rename = "rising")]
-  Rising,
-  
-  #[serde(rename = "steady")]
-  Steady,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum MoonPhase {
-  #[serde(rename="firstQuarter")]
-  FirstQuarter,
-  
-  #[serde(rename="full")]
-  Full,
-  
-  #[serde(rename="lastQuarter")]
-  LastQuarter,
-  
-  #[serde(rename="thirdQuarter")]
-  ThirdQuarter,
-  
-  #[serde(rename="seconduarter")]
-  SecondQuarter,
-  
-  #[serde(rename="new")]
-  New,
-  
-  #[serde(rename="waningCrescent")]
-  WaningCrescent,
-  
-  #[serde(rename="waningGibbous")]
-  WaningGibbous,
-  
-  #[serde(rename="waxingCrescent")]
-  WaxingCrescent,
-  
-  #[serde(rename="waxingGibbous")]
-  WaxingGibbous,
-}
-
 const APPLE_WEATHER_TRADEMARK: &'static str = " Weather";
-
-fn c_to_f(temp: f64) -> f64 {
-  (9.0/5.0) * temp + 32.0
-}
-
-fn meters_to_miles(meters: f64) -> i64 {
-  (meters * 0.000621) as i64
-}
-
-fn kmph_to_mph(kmph: f64) -> f64 {
-  kmph * 0.539593 * 1.1507794
-}
-
-fn uv_label(uv_index: f64, swatch: bool) -> String {
-  
-  String::from(match uv_index as i64 {
-    0 | 1 | 2  => if swatch { "🟩" } else { "Low" },
-    3 | 4 | 5  => if swatch { "🟨" } else { "Moderate" },
-    6 | 7  => if swatch { "🟧" } else { "High" },
-    8 | 9 | 10 => if swatch { "🟥" } else { "Very High" },
-    _ => if swatch { "🟪" } else { "Extreme" },
-  })
-  
-}
-
-fn pressure_trend(trend: &PressureTrend) -> String {
-  
-  String::from(match trend {
-    PressureTrend::Rising => "↑",
-    PressureTrend::Falling => "↓",
-    _ => "—"
-  })
-  
-}
-
-fn precip_type(precip: &PrecipitationType, daylight: bool) -> String {
-  
-  String::from(match precip {
-    PrecipitationType::Hail => "🧊",
-    PrecipitationType::Mixed => "🌂",
-    PrecipitationType::Sleet => "⛆",
-    PrecipitationType::Snow => "❄️",
-    _ => if daylight { "😎" } else { "🌕" }
-  })
-  
-}
-
-fn condition_code(cond: &ConditionCode) -> String {
-  
-  String::from(match cond {
-    ConditionCode::Blizzard => "Blizzard",
-    ConditionCode::BlowingSnow => "Blowing Snow",
-    ConditionCode::Breezy => "Breezy",
-    ConditionCode::Clear => "Clear",
-    ConditionCode::Cloudy => "Cloudy",
-    ConditionCode::Drizzle => "Drizzle",
-    ConditionCode::Dust => "Dust",
-    ConditionCode::Flurries => "Flurries",
-    ConditionCode::Fog => "Fog",
-    ConditionCode::FreezingDrizzle => "Freezing Drizzle",
-    ConditionCode::FreezingRain => "Freezing Rain",
-    ConditionCode::Frigid => "Frigid",
-    ConditionCode::Hail => "Hail",
-    ConditionCode::Haze => "Haze",
-    ConditionCode::HeavyRain => "HeavyRain",
-    ConditionCode::HeavySnow => "HeavySnow",
-    ConditionCode::Hot => "Hot",
-    ConditionCode::Hurricane => "Hurricane",
-    ConditionCode::IsolatedThunderstorms => "Isolated Thunderstorms",
-    ConditionCode::MixedRainAndSleet => "Mixed Rain & Sleet",
-    ConditionCode::MixedRainAndSnow => "Mixed Rain & Snow",
-    ConditionCode::MixedRainfall => "MixedRainfall",
-    ConditionCode::MixedSnowAndSleet => "Mixed Snow & Sleet",
-    ConditionCode::MostlyClear => "Mostly Clear",
-    ConditionCode::MostlyCloudy => "Mostly Cloudy",
-    ConditionCode::PartlyCloudy => "Partly Cloudy",
-    ConditionCode::Rain => "Rain",
-    ConditionCode::ScatteredShowers => "Scattered Showers",
-    ConditionCode::ScatteredSnowShowers => "Scattered Snow Showers",
-    ConditionCode::ScatteredThunderstorms => "Scattered Thunderstorms",
-    ConditionCode::SevereThunderstorm => "Severe Thunderstorm",
-    ConditionCode::Showers => "Showers",
-    ConditionCode::Sleet => "Sleet",
-    ConditionCode::Smoke => "Smoke",
-    ConditionCode::Snow => "Snow",
-    ConditionCode::SnowShowers => "Snow Showers",
-    ConditionCode::Thunderstorm => "Thunderstorm",
-    ConditionCode::Tornado => "Tornado",
-    ConditionCode::TropicalStorm => "Tropical Storm",
-    ConditionCode::Windy => "Windy"
-  })
-  
-}
-
-fn rescale_val(x: i64, from_min: i64, from_max: i64, to_min: i64, to_max: i64) -> i64 {
-  (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min
-}
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -681,8 +51,22 @@ struct Args {
   
 }
 
-#[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
+/// Setup the JSON Web Token from the required environment variables.
+/// 
+/// # Arguments
+/// 
+/// * None
+/// 
+/// # Required Environment Variables
+/// 
+/// - `WEATHERKIT_KEY_ID`
+/// - `WEATHERKIT_SERVICE_ID`
+/// - `WEATHERKIT_TEAM_ID`
+/// - `WEATHERKIT_KEY_PATH`
+/// 
+/// See <https://github.com/hrbrmstr/weatherkit-rust/blob/batman/authorization.md> for how to 
+/// set up those values.
+fn setup_jwt() -> String {
   
   let wxkit_keyid = env::var("WEATHERKIT_KEY_ID").expect("Please set WEATHERKIT_KEY_ID");
   let wxkit_service_id = env::var("WEATHERKIT_SERVICE_ID").expect("Please set WEATHERKIT_SERVICE_ID");
@@ -713,18 +97,28 @@ async fn main() -> Result<(), reqwest::Error> {
     "id": format!("{}.{}", wxkit_teamid.to_owned(), wxkit_service_id.to_owned())
   });
   
-  // println!("{}\n{}", claims, header);
-  
-  let token = encode(&header, &claims, &alg).expect("Error creating JWT");
-  
-  let args = Args::parse();
+  return encode(&header, &claims, &alg).expect("Error creating JWT");
 
-  let latitude = args.lat;
-  let longitude = args.lon;
-  let language = args.lang;
-  let tzone = lookup(latitude.parse().unwrap(), longitude.parse().unwrap()).unwrap();
+}
+
+/// Retrieve weather data from Apple's WeatherKit REST API
+/// 
+/// # Arguments
+/// 
+/// - `token` - JWT from [setup_jtw()] call
+/// - `latitude` - latitude
+/// - `longitude` - longitude
+/// - `language` - language code
+/// - `tzone` - time zone string
+/// - `utc_now` - "now" in UTC
+async fn get_weatherkit_weather(token: String, 
+                                latitude: String,
+                                longitude: String, 
+                                language: String, 
+                                tzone: String, 
+                                utc_now: DateTime<Utc>) -> 
+                                Result<weatherkitweather::WeatherKitWeather, reqwest::Error> {
   
-  let utc_now = Utc::now();
   let utc_now_fmt = utc_now.to_rfc3339_opts(SecondsFormat::Secs, true);
 
   let url = format!(
@@ -739,27 +133,47 @@ async fn main() -> Result<(), reqwest::Error> {
     .header("Authorization", format!("Bearer {}", token))
     .header("Accept", "application/json");
   
-  let resp = call.send().await?.json::<WeatherKitWeather>().await?;
+  return call.send().await?.json::<WeatherKitWeather>().await;
+
+}
+
+#[tokio::main]
+async fn main() -> Result<(), reqwest::Error> {
+
+  let token = setup_jwt();
+
+  let args = Args::parse();
+
+  let tzone = lookup(args.lat.parse().unwrap(), args.lon.parse().unwrap()).unwrap();
+  let tz: Tz = tzone.parse().unwrap();
+
+  let utc_now = Utc::now();
+
+  let resp = get_weatherkit_weather(token, args.lat, args.lon, args.lang, tzone, utc_now).await?;
   
   let num = NumberFormat::new();
 
-  let tz: Tz = tzone.parse().unwrap();
   let as_of_time = DateTime::parse_from_rfc3339(resp.current_weather.as_of.as_str()).unwrap().with_timezone(&tz);
   
+  // Attribution labeling required by Apple
   println!("{} daily forecast for ({}, {}) as of {}\n", APPLE_WEATHER_TRADEMARK, resp.current_weather.metadata.latitude, resp.current_weather.metadata.longitude, as_of_time);
   
-  println!(" Conditions: {}",          format!("{:?}", resp.current_weather.condition_code));
-  println!("Temperature: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature)));
-  println!(" Feels like: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature_apparent)));
-  println!("  Dew Point: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
-  println!("       Wind: {} mph",      num.format(".0f", kmph_to_mph(resp.current_weather.wind_speed)));
-  println!("   Pressure: {} mb ({})",  num.format(".0f", resp.current_weather.pressure), format!("{:?}", resp.current_weather.pressure_trend));
-  println!(" Visibility: {} miles",    meters_to_miles(resp.current_weather.visibility) as i64);
-  println!("   UV Index: {} {}",       uv_label(resp.current_weather.uv_index, true), uv_label(resp.current_weather.uv_index, false));
+  // TODO metric option for everything that's displayed
+
+  println!(" Conditions: {}",         format!("{:?}", resp.current_weather.condition_code));
+  println!("Temperature: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature)));
+  println!(" Feels like: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_apparent)));
+  println!("  Dew Point: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
+  println!("       Wind: {} mph",     num.format(".0f", kmph_to_mph(resp.current_weather.wind_speed)));
+  println!("   Pressure: {} mb ({})", num.format(".0f", resp.current_weather.pressure), format!("{:?}", resp.current_weather.pressure_trend));
+  println!(" Visibility: {} miles",   meters_to_miles(resp.current_weather.visibility) as i64);
+  println!("   UV Index: {} {}",      uv_label(resp.current_weather.uv_index, true), uv_label(resp.current_weather.uv_index, false));
   println!();
 
   let hrs = resp.forecast_hourly.hours;
   
+  // get max lengths of various values so we can pad properly and not too much
+
   let max_hr_temp_len = hrs[0..23].iter().fold(0, |accum, hr| {
     let hr_len = num.format(".0f", c_to_f(hr.temperature)).len();
     if accum >= hr_len { accum } else { hr_len }
@@ -775,6 +189,8 @@ async fn main() -> Result<(), reqwest::Error> {
     if accum >= hr_len { accum } else { hr_len }
   });
    
+  // keep track of day's we've seen & printed so we don't print them more than once
+
   let mut day_set: HashSet<String> = HashSet::new();
 
   for idx in 0..hrs[0..23].len() {
@@ -806,6 +222,8 @@ async fn main() -> Result<(), reqwest::Error> {
   println!();
 
   let days = resp.forecast_daily.days;
+
+  // get all the info we need to rescale the temp ranges to 1..30 (# chars in the fake bars)
 
   let min_temps: Vec<i64> = days.iter().map(|d| c_to_f(d.temperature_min) as i64).collect();
   let max_temps: Vec<i64> = days.iter().map(|d| c_to_f(d.temperature_max) as i64).collect();
@@ -859,7 +277,7 @@ async fn main() -> Result<(), reqwest::Error> {
 
   println!();
 
-  println!("{}", resp.current_weather.metadata.attribution_url);
+  println!("{}", resp.current_weather.metadata.attribution_url); // Attribution labeling required by Apple
 
   Ok(())
   
