@@ -3,10 +3,23 @@ use std::io::Read;
 use std::io::BufReader;
 use std::fs::File;
 use std::env;
+use std::collections::HashSet;
+
 use serde::{Serialize, Deserialize};
 use serde_json::json;
+
 use jsonwebtokens as jwt;
 use jwt::{Algorithm, AlgorithmID, encode};
+
+use tz_search::{lookup};
+
+use format_num::NumberFormat;
+
+use pad::{PadStr, Alignment};
+
+use chrono::prelude::*;
+use chrono::{DateTime, Utc, SecondsFormat};
+use chrono_tz::Tz;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherKitWeather {
@@ -20,7 +33,7 @@ pub struct WeatherKitWeather {
   pub forecast_hourly: ForecastHourly,
   
   #[serde(rename = "forecastNextHour")]
-  pub forecast_next_hour: ForecastNextHour,
+  pub forecast_next_hour: Option<ForecastNextHour>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -78,9 +91,8 @@ pub struct CurrentWeather {
   
   #[serde(rename = "windSpeed")]
   pub wind_speed: f64,
-
+  
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HourWeatherconditions {
@@ -145,7 +157,6 @@ pub struct HourWeatherconditions {
   #[serde(rename = "snowfallIntensity")]
   pub snowfall_intensity: f64,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Metadata {
@@ -267,7 +278,7 @@ pub struct Day {
   pub daytime_forecast: Forecast,
   
   #[serde(rename = "overnightForecast")]
-  pub overnight_forecast: Forecast,
+  pub overnight_forecast: Option<Forecast>,
   
   #[serde(rename = "restOfDayForecast")]
   pub rest_of_day_forecast: Option<Forecast>,
@@ -497,6 +508,9 @@ pub enum PrecipitationType {
   #[serde(rename = "snow")]
   Snow,
   
+  #[serde(rename = "sleet")]
+  Sleet,
+  
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -522,6 +536,12 @@ pub enum MoonPhase {
   #[serde(rename="lastQuarter")]
   LastQuarter,
   
+  #[serde(rename="thirdQuarter")]
+  ThirdQuarter,
+  
+  #[serde(rename="seconduarter")]
+  SecondQuarter,
+  
   #[serde(rename="new")]
   New,
   
@@ -538,6 +558,100 @@ pub enum MoonPhase {
   WaxingGibbous,
 }
 
+const APPLE_WEATHER_TRADEMARK: &'static str = " Weather";
+
+fn c_to_f(temp: f64) -> f64 {
+  (9.0/5.0) * temp + 32.0
+}
+
+fn meters_to_miles(meters: f64) -> i64 {
+  (meters * 0.000621) as i64
+}
+
+fn kmph_to_mph(kmph: f64) -> f64 {
+  kmph * 0.539593 * 1.1507794
+}
+
+fn uv_label(uv_index: f64, swatch: bool) -> String {
+  
+  String::from(match uv_index as i64 {
+    0 | 1 | 2  => if swatch { "🟩" } else { "Low" },
+    3 | 4 | 5  => if swatch { "🟨" } else { "Moderate" },
+    6 | 7  => if swatch { "🟧" } else { "High" },
+    8 | 9 | 10 => if swatch { "🟥" } else { "Very High" },
+    _ => if swatch { "🟪" } else { "Extreme" },
+  })
+  
+}
+
+fn pressure_trend(trend: &PressureTrend) -> String {
+  
+  String::from(match trend {
+    PressureTrend::Rising => "↑",
+    PressureTrend::Falling => "↓",
+    _ => "—"
+  })
+  
+}
+
+fn precip_type(precip: &PrecipitationType, daylight: bool) -> String {
+  
+  String::from(match precip {
+    PrecipitationType::Hail => "🧊",
+    PrecipitationType::Mixed => "🌂",
+    PrecipitationType::Sleet => "⛆",
+    PrecipitationType::Snow => "❄️",
+    _ => if daylight { "😎" } else { "🌕" }
+  })
+  
+}
+
+fn condition_code(cond: &ConditionCode) -> String {
+  
+  String::from(match cond {
+    ConditionCode::Blizzard => "Blizzard",
+    ConditionCode::BlowingSnow => "Blowing Snow",
+    ConditionCode::Breezy => "Breezy",
+    ConditionCode::Clear => "Clear",
+    ConditionCode::Cloudy => "Cloudy",
+    ConditionCode::Drizzle => "Drizzle",
+    ConditionCode::Dust => "Dust",
+    ConditionCode::Flurries => "Flurries",
+    ConditionCode::Fog => "Fog",
+    ConditionCode::FreezingDrizzle => "Freezing Drizzle",
+    ConditionCode::FreezingRain => "Freezing Rain",
+    ConditionCode::Frigid => "Frigid",
+    ConditionCode::Hail => "Hail",
+    ConditionCode::Haze => "Haze",
+    ConditionCode::HeavyRain => "HeavyRain",
+    ConditionCode::HeavySnow => "HeavySnow",
+    ConditionCode::Hot => "Hot",
+    ConditionCode::Hurricane => "Hurricane",
+    ConditionCode::IsolatedThunderstorms => "Isolated Thunderstorms",
+    ConditionCode::MixedRainAndSleet => "Mixed Rain & Sleet",
+    ConditionCode::MixedRainAndSnow => "Mixed Rain & Snow",
+    ConditionCode::MixedRainfall => "MixedRainfall",
+    ConditionCode::MixedSnowAndSleet => "Mixed Snow & Sleet",
+    ConditionCode::MostlyClear => "Mostly Clear",
+    ConditionCode::MostlyCloudy => "Mostly Cloudy",
+    ConditionCode::PartlyCloudy => "Partly Cloudy",
+    ConditionCode::Rain => "Rain",
+    ConditionCode::ScatteredShowers => "Scattered Showers",
+    ConditionCode::ScatteredSnowShowers => "Scattered Snow Showers",
+    ConditionCode::ScatteredThunderstorms => "Scattered Thunderstorms",
+    ConditionCode::SevereThunderstorm => "Severe Thunderstorm",
+    ConditionCode::Showers => "Showers",
+    ConditionCode::Sleet => "Sleet",
+    ConditionCode::Smoke => "Smoke",
+    ConditionCode::Snow => "Snow",
+    ConditionCode::SnowShowers => "Snow Showers",
+    ConditionCode::Thunderstorm => "Thunderstorm",
+    ConditionCode::Tornado => "Tornado",
+    ConditionCode::TropicalStorm => "Tropical Storm",
+    ConditionCode::Windy => "Windy"
+  })
+  
+}
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
@@ -575,20 +689,88 @@ async fn main() -> Result<(), reqwest::Error> {
   
   let token = encode(&header, &claims, &alg).expect("Error creating JWT");
   
-  let url = format!("https://weatherkit.apple.com/api/v1/weather/{}/{}/{}?timezone=America/New_York&dataSets=currentWeather,forecastDaily,forecastHourly,forecastNextHour,weatherAlerts", "en", 43.2, -70.8);
+  let latitude = 43.2;
+  let longitude = -70.8;
+  let language = "en";
+  let tzone = lookup(latitude, longitude).unwrap();
+  
+  let utc_now = Utc::now();
+  let utc_now_fmt = utc_now.to_rfc3339_opts(SecondsFormat::Secs, true);
+
+  let url = format!(
+    "https://weatherkit.apple.com/api/v1/weather/{}/{}/{}?timezone={}&dataSets=currentWeather,forecastDaily,forecastHourly,weatherAlerts&dailyStart={}&hourlyStart={}", 
+    language, latitude, longitude, tzone, utc_now_fmt, utc_now_fmt
+  );
   
   let client = reqwest::Client::new();
   
-  let mut call = client.get(url);
-  call = call
-  .header("Authorization", format!("Bearer {}", token))
-  .header("Accept", "application/json");
+  let call = client
+    .get(url)
+    .header("Authorization", format!("Bearer {}", token))
+    .header("Accept", "application/json");
   
   let resp = call.send().await?.json::<WeatherKitWeather>().await?;
   
-  // println!("{:?}", resp);
+  let num = NumberFormat::new();
+  
+  println!("{} daily forecast for ({}, {}) as of {}\n", APPLE_WEATHER_TRADEMARK, resp.current_weather.metadata.latitude, resp.current_weather.metadata.longitude, resp.current_weather.as_of);
+  
+  println!(" Conditions: {}",          format!("{:?}", resp.current_weather.condition_code));
+  println!("Temperature: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature)));
+  println!(" Feels like: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature_apparent)));
+  println!("  Dew Point: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
+  println!("       Wind: {} mph",      num.format(".0f", kmph_to_mph(resp.current_weather.wind_speed)));
+  println!("   Pressure: {} mb ({})",  num.format(".0f", resp.current_weather.pressure), format!("{:?}", resp.current_weather.pressure_trend));
+  println!(" Visibility: {} miles",    meters_to_miles(resp.current_weather.wind_speed) as i64);
+  println!("   UV Index: {} {}",       uv_label(resp.current_weather.uv_index, true), uv_label(resp.current_weather.uv_index, false));
+  println!();
 
-  println!("{}", format!("{:?}", resp.current_weather.condition_code));
+  let hrs = resp.forecast_hourly.hours;
+  
+  let max_hr_temp_len = hrs[0..23].iter().fold(0, |accum, hr| {
+    let hr_len = num.format(".0f", c_to_f(hr.temperature)).len();
+    if accum >= hr_len { accum } else { hr_len }
+  });
+  
+  let max_hr_humid_len = hrs[0..23].iter().fold(0, |accum, hr| {
+    let hr_len = num.format(".0f", hr.humidity * 100.0).len();
+    if accum >= hr_len { accum } else { hr_len }
+  });
+
+  let max_hr_condiiton_len = hrs[0..23].iter().fold(0, |accum, hr| {
+    let hr_len = condition_code(&hr.condition_code).len();
+    if accum >= hr_len { accum } else { hr_len }
+  });
+
+  let tz: Tz = tzone.parse().unwrap();
+   
+  let mut day_set: HashSet<String> = HashSet::new();
+
+  for idx in 0..hrs[0..23].len() {
+
+    let hour = &hrs[idx];
+  
+    let utc_fcast_time = DateTime::parse_from_rfc3339(hour.forecast_start.as_str()).unwrap();
+    let local_time = utc_fcast_time.with_timezone(&tz);
+    let weekday = format!("{}", local_time.weekday()).pad_to_width_with_alignment(5, Alignment::Right);
+    let printed_str = if local_time.date() == utc_now.date() { "Today" } else { weekday.as_str() };
+
+    println!(
+      "{} @ {}:00 │ 🌡  {}°F │ 💦 {}% │ {} mb {} │ {} │ {} │ {}",
+      if day_set.contains(printed_str) { "     " } else { printed_str },
+      num.format("02d", local_time.hour()),
+      num.format(".0f", c_to_f(hour.temperature)).pad_to_width_with_alignment(max_hr_temp_len, Alignment::Right),
+      num.format(".0f", hour.humidity * 100.0).pad_to_width_with_alignment(max_hr_humid_len, Alignment::Right),
+      num.format("4.0f", hour.pressure),
+      pressure_trend(&hour.pressure_trend),
+      precip_type(&hour.precipitation_type, hour.daylight),
+      condition_code(&hour.condition_code).pad_to_width(max_hr_condiiton_len),
+      uv_label(hour.uv_index, true)
+    );
+
+    day_set.insert(printed_str.to_string());
+    
+  }
   
   Ok(())
   
