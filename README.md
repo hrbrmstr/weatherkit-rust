@@ -31,3 +31,22 @@ OPTIONS:
 You get something like this:
 
 ![](sample-forecast.png)
+
+## Building
+
+```
+git clone git@github.com:hrbrmstr/weatherkit-rust
+cargo build --release 
+```
+
+## Installing
+
+The following will put:
+
+- `weatherkit`
+
+into `~/.cargo/bin` unless you've modified the behaviour of `cargo install`.
+
+```
+$ cargo install --git https://github.com/hrbrmstr/weatherkit-rust
+```
