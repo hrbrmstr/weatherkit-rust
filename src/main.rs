@@ -21,6 +21,10 @@ use chrono::prelude::*;
 use chrono::{DateTime, Utc, SecondsFormat};
 use chrono_tz::Tz;
 
+extern crate colored;
+
+use colored::{*};
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherKitWeather {
   #[serde(rename = "currentWeather")]
@@ -212,7 +216,7 @@ pub struct Day {
   pub forecast_end: String,
   
   #[serde(rename = "conditionCode")]
-  pub condition_code: String,
+  pub condition_code: ConditionCode,
   
   #[serde(rename = "maxUvIndex")]
   pub max_uv_index: f64,
@@ -653,6 +657,12 @@ fn condition_code(cond: &ConditionCode) -> String {
   
 }
 
+//    const result = (value - this.inMin) * (this.outMax - this.outMin) / (this.inMax - this.inMin) + this.outMin;
+
+fn rescale_val(x: i64, from_min: i64, from_max: i64, to_min: i64, to_max: i64) -> i64 {
+  (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min
+}
+
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
   
@@ -773,6 +783,64 @@ async fn main() -> Result<(), reqwest::Error> {
     
   }
   
+  println!();
+
+  let days = resp.forecast_daily.days;
+
+  let min_temps: Vec<i64> = days.iter().map(|d| c_to_f(d.temperature_min) as i64).collect();
+  let max_temps: Vec<i64> = days.iter().map(|d| c_to_f(d.temperature_max) as i64).collect();
+
+  let min_temp = min_temps.iter().min().expect("INCOSPIGLE!");
+  let max_temp = max_temps.iter().max().expect("INCOSPIGLE!");
+
+  let max_day_temp_len = days.iter().fold(0, |accum, day| {
+    let day_len = num.format("d", c_to_f(day.temperature_max) as i32).len();
+    if accum >= day_len { accum } else { day_len }
+  });
+
+  let block = "▆";
+
+  for idx in 0..days.len() {
+
+    let day = &days[idx];
+
+    let utc_fcast_time = DateTime::parse_from_rfc3339(day.forecast_start.as_str()).unwrap();
+    let local_time = utc_fcast_time.with_timezone(&tz);
+    let weekday = format!("{}", local_time.weekday()).pad_to_width_with_alignment(5, Alignment::Right);
+    let weekday_str = if local_time.date() == utc_now.date() { "Today" } else { weekday.as_str() };
+
+    let day_min = c_to_f(day.temperature_min) as i32;
+    let day_max = c_to_f(day.temperature_max) as i32;
+    let day_min_scaled = rescale_val(day_min as i64, *min_temp, *max_temp, 1, 30);
+    let day_max_scaled = rescale_val(day_max as i64, *min_temp, *max_temp, 1, 30);
+
+    print!(
+      "{} {}°F ", 
+      weekday_str,
+      num.format("d", day_min).pad_to_width_with_alignment(max_day_temp_len, Alignment::Right),
+    );
+
+    for cell in 1..30 {
+      if cell >= day_min_scaled && cell <= day_max_scaled {
+        print!("{}", block.color("yellow"));
+      } else {
+        print!("{}", block.color("bright black"));
+      }
+    }
+    
+    println!(
+      " {}°F {} {}",
+      num.format("d", day_max).pad_to_width_with_alignment(max_day_temp_len, Alignment::Left),
+      uv_label(day.max_uv_index, true),
+      condition_code(&day.condition_code)
+    );
+
+  }
+
+  println!();
+
+  println!("{}", resp.current_weather.metadata.attribution_url);
+
   Ok(())
   
 }
