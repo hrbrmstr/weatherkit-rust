@@ -25,6 +25,8 @@ extern crate colored;
 
 use colored::{*};
 
+use clap::{Parser};
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherKitWeather {
   #[serde(rename = "currentWeather")]
@@ -657,10 +659,26 @@ fn condition_code(cond: &ConditionCode) -> String {
   
 }
 
-//    const result = (value - this.inMin) * (this.outMax - this.outMin) / (this.inMax - this.inMin) + this.outMin;
-
 fn rescale_val(x: i64, from_min: i64, from_max: i64, to_min: i64, to_max: i64) -> i64 {
   (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min
+}
+
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+
+  // latitude
+  #[clap(long, default_value_t = String::from("43.2683199"))]
+  lat: String,
+
+  // longitude
+  #[clap(long, default_value_t = String::from("-70.8635506"))]
+  lon: String,
+
+  // language
+  #[clap(long, default_value_t = String::from("en"))]
+  lang: String
+  
 }
 
 #[tokio::main]
@@ -699,10 +717,12 @@ async fn main() -> Result<(), reqwest::Error> {
   
   let token = encode(&header, &claims, &alg).expect("Error creating JWT");
   
-  let latitude = 43.2;
-  let longitude = -70.8;
-  let language = "en";
-  let tzone = lookup(latitude, longitude).unwrap();
+  let args = Args::parse();
+
+  let latitude = args.lat;
+  let longitude = args.lon;
+  let language = args.lang;
+  let tzone = lookup(latitude.parse().unwrap(), longitude.parse().unwrap()).unwrap();
   
   let utc_now = Utc::now();
   let utc_now_fmt = utc_now.to_rfc3339_opts(SecondsFormat::Secs, true);

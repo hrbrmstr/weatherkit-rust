@@ -1,5 +1,11 @@
 [package]
-name = "weatherkit-rust"
+name = "weatherkit"
+authors = [ "boB Rudis (@hrbrmstr)" ]
+description = "Print Apple WeatherKit REST API weather conditions and hourly/daily foreacast to the console."
+license = "MIT"
+homepage = "https://github.com/hrbrmstr/weatherkit-rust"
+repository = "https://github.com/hrbrmstr/weatherkit-rust"
+keywords = [ "darksky", "weather", "weatherkit" ]
 version = "0.1.0"
 edition = "2021"
 
@@ -18,3 +24,4 @@ pad = "0.1.6"
 chrono = "0.4.19"
 chrono-tz = "0.6.1"
 colored = "2"
+clap = { version = "3.1.18", features = ["derive"] }
