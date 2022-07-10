@@ -1,0 +1,572 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;main.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>main.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../weatherkit/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<span id="2">  2</span>
+<span id="3">  3</span>
+<span id="4">  4</span>
+<span id="5">  5</span>
+<span id="6">  6</span>
+<span id="7">  7</span>
+<span id="8">  8</span>
+<span id="9">  9</span>
+<span id="10"> 10</span>
+<span id="11"> 11</span>
+<span id="12"> 12</span>
+<span id="13"> 13</span>
+<span id="14"> 14</span>
+<span id="15"> 15</span>
+<span id="16"> 16</span>
+<span id="17"> 17</span>
+<span id="18"> 18</span>
+<span id="19"> 19</span>
+<span id="20"> 20</span>
+<span id="21"> 21</span>
+<span id="22"> 22</span>
+<span id="23"> 23</span>
+<span id="24"> 24</span>
+<span id="25"> 25</span>
+<span id="26"> 26</span>
+<span id="27"> 27</span>
+<span id="28"> 28</span>
+<span id="29"> 29</span>
+<span id="30"> 30</span>
+<span id="31"> 31</span>
+<span id="32"> 32</span>
+<span id="33"> 33</span>
+<span id="34"> 34</span>
+<span id="35"> 35</span>
+<span id="36"> 36</span>
+<span id="37"> 37</span>
+<span id="38"> 38</span>
+<span id="39"> 39</span>
+<span id="40"> 40</span>
+<span id="41"> 41</span>
+<span id="42"> 42</span>
+<span id="43"> 43</span>
+<span id="44"> 44</span>
+<span id="45"> 45</span>
+<span id="46"> 46</span>
+<span id="47"> 47</span>
+<span id="48"> 48</span>
+<span id="49"> 49</span>
+<span id="50"> 50</span>
+<span id="51"> 51</span>
+<span id="52"> 52</span>
+<span id="53"> 53</span>
+<span id="54"> 54</span>
+<span id="55"> 55</span>
+<span id="56"> 56</span>
+<span id="57"> 57</span>
+<span id="58"> 58</span>
+<span id="59"> 59</span>
+<span id="60"> 60</span>
+<span id="61"> 61</span>
+<span id="62"> 62</span>
+<span id="63"> 63</span>
+<span id="64"> 64</span>
+<span id="65"> 65</span>
+<span id="66"> 66</span>
+<span id="67"> 67</span>
+<span id="68"> 68</span>
+<span id="69"> 69</span>
+<span id="70"> 70</span>
+<span id="71"> 71</span>
+<span id="72"> 72</span>
+<span id="73"> 73</span>
+<span id="74"> 74</span>
+<span id="75"> 75</span>
+<span id="76"> 76</span>
+<span id="77"> 77</span>
+<span id="78"> 78</span>
+<span id="79"> 79</span>
+<span id="80"> 80</span>
+<span id="81"> 81</span>
+<span id="82"> 82</span>
+<span id="83"> 83</span>
+<span id="84"> 84</span>
+<span id="85"> 85</span>
+<span id="86"> 86</span>
+<span id="87"> 87</span>
+<span id="88"> 88</span>
+<span id="89"> 89</span>
+<span id="90"> 90</span>
+<span id="91"> 91</span>
+<span id="92"> 92</span>
+<span id="93"> 93</span>
+<span id="94"> 94</span>
+<span id="95"> 95</span>
+<span id="96"> 96</span>
+<span id="97"> 97</span>
+<span id="98"> 98</span>
+<span id="99"> 99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::time</span>::{<span class="ident">UNIX_EPOCH</span>, <span class="ident">SystemTime</span>};
+<span class="kw">use</span> <span class="ident">std::io::Read</span>;
+<span class="kw">use</span> <span class="ident">std::io::BufReader</span>;
+<span class="kw">use</span> <span class="ident">std::fs::File</span>;
+<span class="kw">use</span> <span class="ident">std::env</span>;
+<span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
+
+<span class="kw">use</span> <span class="ident">serde_json::json</span>;
+
+<span class="kw">use</span> <span class="ident">jsonwebtokens</span> <span class="kw">as</span> <span class="ident">jwt</span>;
+<span class="kw">use</span> <span class="ident">jwt</span>::{<span class="ident">Algorithm</span>, <span class="ident">AlgorithmID</span>, <span class="ident">encode</span>};
+
+<span class="kw">use</span> <span class="ident">tz_search</span>::{<span class="ident">lookup</span>};
+
+<span class="kw">use</span> <span class="ident">format_num::NumberFormat</span>;
+
+<span class="kw">use</span> <span class="ident">pad</span>::{<span class="ident">PadStr</span>, <span class="ident">Alignment</span>};
+
+<span class="kw">use</span> <span class="ident">chrono::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">Utc</span>, <span class="ident">SecondsFormat</span>};
+<span class="kw">use</span> <span class="ident">chrono_tz::Tz</span>;
+
+<span class="kw">mod</span> <span class="ident">weatherkitweather</span>;
+<span class="kw">use</span> <span class="ident">weatherkitweather</span>::{<span class="kw-2">*</span>};
+
+<span class="kw">mod</span> <span class="ident">utils</span>;
+<span class="kw">use</span> <span class="ident">utils</span>::{<span class="kw-2">*</span>};
+
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">colored</span>;
+<span class="kw">use</span> <span class="ident">colored</span>::{<span class="kw-2">*</span>};
+
+<span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">Parser</span>};
+
+<span class="kw">const</span> <span class="ident">APPLE_WEATHER_TRADEMARK</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot; Weather&quot;</span>;
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Parser</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">author</span>, <span class="ident">version</span>, <span class="ident">about</span>, <span class="ident">long_about</span> <span class="op">=</span> <span class="prelude-val">None</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Args</span> {
+
+  <span class="comment">// latitude</span>
+  <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot;43.2683199&quot;</span>))]</span>
+  <span class="ident">lat</span>: <span class="ident">String</span>,
+
+  <span class="comment">// longitude</span>
+  <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot;-70.8635506&quot;</span>))]</span>
+  <span class="ident">lon</span>: <span class="ident">String</span>,
+
+  <span class="comment">// language</span>
+  <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot;en&quot;</span>))]</span>
+  <span class="ident">lang</span>: <span class="ident">String</span>
+  
+}
+
+<span class="doccomment">/// Setup the JSON Web Token from the required environment variables.</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// # Arguments</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// * None</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// # Required Environment Variables</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// - `WEATHERKIT_KEY_ID`</span>
+<span class="doccomment">/// - `WEATHERKIT_SERVICE_ID`</span>
+<span class="doccomment">/// - `WEATHERKIT_TEAM_ID`</span>
+<span class="doccomment">/// - `WEATHERKIT_KEY_PATH`</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// See &lt;https://github.com/hrbrmstr/weatherkit-rust/blob/batman/authorization.md&gt; for how to </span>
+<span class="doccomment">/// set up those values.</span>
+<span class="kw">fn</span> <span class="ident">setup_jwt</span>() -&gt; <span class="ident">String</span> {
+  
+  <span class="kw">let</span> <span class="ident">wxkit_keyid</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;WEATHERKIT_KEY_ID&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Please set WEATHERKIT_KEY_ID&quot;</span>);
+  <span class="kw">let</span> <span class="ident">wxkit_service_id</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;WEATHERKIT_SERVICE_ID&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Please set WEATHERKIT_SERVICE_ID&quot;</span>);
+  <span class="kw">let</span> <span class="ident">wxkit_teamid</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;WEATHERKIT_TEAM_ID&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Please set WEATHERKIT_TEAM_ID&quot;</span>);
+  <span class="kw">let</span> <span class="ident">wxkit_key_path</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;WEATHERKIT_KEY_PATH&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Please set WEATHERKIT_KEY_PATH&quot;</span>);
+  
+  <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File::open</span>(<span class="ident">wxkit_key_path</span>.<span class="ident">as_str</span>()).<span class="ident">expect</span>(<span class="string">&quot;Error opening key file at WEATHERKIT_KEY_PATH&quot;</span>);
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reader</span> <span class="op">=</span> <span class="ident">BufReader::new</span>(<span class="ident">f</span>);
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">Vec::new</span>();    
+  <span class="ident">reader</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer</span>).<span class="ident">expect</span>(<span class="string">&quot;Error reading key file at WEATHERKIT_KEY_PATH&quot;</span>);
+  <span class="kw">let</span> <span class="ident">key_buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">buffer</span>;
+  
+  <span class="kw">let</span> <span class="ident">alg</span> <span class="op">=</span> <span class="ident">Algorithm::new_ecdsa_pem_signer</span>(<span class="ident">AlgorithmID::ES256</span>, <span class="ident">key_buf</span>).<span class="ident">expect</span>(<span class="string">&quot;Error decoding PEM&quot;</span>);
+  
+  <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">SystemTime::now</span>().<span class="ident">duration_since</span>(<span class="ident">UNIX_EPOCH</span>).<span class="ident">expect</span>(<span class="string">&quot;Timey wimey&quot;</span>).<span class="ident">as_secs</span>();
+  <span class="kw">let</span> <span class="ident">expires</span> <span class="op">=</span> <span class="ident">now</span> <span class="op">+</span> <span class="number">3600</span>;
+  
+  <span class="kw">let</span> <span class="ident">claims</span> <span class="op">=</span> <span class="macro">json!</span>({
+    <span class="string">&quot;iss&quot;</span>: <span class="ident">wxkit_teamid</span>.<span class="ident">to_owned</span>(),
+    <span class="string">&quot;iat&quot;</span>: <span class="ident">now</span>,
+    <span class="string">&quot;exp&quot;</span>: <span class="ident">expires</span>,
+    <span class="string">&quot;sub&quot;</span>: <span class="ident">wxkit_service_id</span>.<span class="ident">to_owned</span>()
+  });
+  
+  <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="macro">json!</span>({
+    <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;ES256&quot;</span>,
+    <span class="string">&quot;kid&quot;</span>: <span class="ident">wxkit_keyid</span>.<span class="ident">to_owned</span>(),
+    <span class="string">&quot;id&quot;</span>: <span class="macro">format!</span>(<span class="string">&quot;{}.{}&quot;</span>, <span class="ident">wxkit_teamid</span>.<span class="ident">to_owned</span>(), <span class="ident">wxkit_service_id</span>.<span class="ident">to_owned</span>())
+  });
+  
+  <span class="kw">return</span> <span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>, <span class="kw-2">&amp;</span><span class="ident">claims</span>, <span class="kw-2">&amp;</span><span class="ident">alg</span>).<span class="ident">expect</span>(<span class="string">&quot;Error creating JWT&quot;</span>);
+
+}
+
+<span class="doccomment">/// Retrieve weather data from Apple&#39;s WeatherKit REST API</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// # Arguments</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// - `token` - JWT from [setup_jwt()] call</span>
+<span class="doccomment">/// - `latitude` - latitude</span>
+<span class="doccomment">/// - `longitude` - longitude</span>
+<span class="doccomment">/// - `language` - language code</span>
+<span class="doccomment">/// - `tzone` - time zone string</span>
+<span class="doccomment">/// - `utc_now` - &quot;now&quot; in UTC</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_weatherkit_weather</span>(<span class="ident">token</span>: <span class="ident">String</span>, 
+                                <span class="ident">latitude</span>: <span class="ident">String</span>,
+                                <span class="ident">longitude</span>: <span class="ident">String</span>, 
+                                <span class="ident">language</span>: <span class="ident">String</span>, 
+                                <span class="ident">tzone</span>: <span class="ident">String</span>, 
+                                <span class="ident">utc_now</span>: <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>) -&gt; 
+                                <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">weatherkitweather::WeatherKitWeather</span>, <span class="ident">reqwest::Error</span><span class="op">&gt;</span> {
+  
+  <span class="kw">let</span> <span class="ident">utc_now_fmt</span> <span class="op">=</span> <span class="ident">utc_now</span>.<span class="ident">to_rfc3339_opts</span>(<span class="ident">SecondsFormat::Secs</span>, <span class="bool-val">true</span>);
+
+  <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">format!</span>(
+    <span class="string">&quot;https://weatherkit.apple.com/api/v1/weather/{}/{}/{}?timezone={}&amp;dataSets=currentWeather,forecastDaily,forecastHourly,weatherAlerts&amp;dailyStart={}&amp;hourlyStart={}&quot;</span>, 
+    <span class="ident">language</span>, <span class="ident">latitude</span>, <span class="ident">longitude</span>, <span class="ident">tzone</span>, <span class="ident">utc_now_fmt</span>, <span class="ident">utc_now_fmt</span>
+  );
+  
+  <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">reqwest::Client::new</span>();
+  
+  <span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">client</span>
+    .<span class="ident">get</span>(<span class="ident">url</span>)
+    .<span class="ident">header</span>(<span class="string">&quot;Authorization&quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;Bearer {}&quot;</span>, <span class="ident">token</span>))
+    .<span class="ident">header</span>(<span class="string">&quot;Accept&quot;</span>, <span class="string">&quot;application/json&quot;</span>);
+  
+  <span class="kw">return</span> <span class="ident">call</span>.<span class="ident">send</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">json</span>::<span class="op">&lt;</span><span class="ident">WeatherKitWeather</span><span class="op">&gt;</span>().<span class="kw">await</span>;
+
+}
+
+<span class="attribute">#[<span class="ident">tokio::main</span>]</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">reqwest::Error</span><span class="op">&gt;</span> {
+
+  <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">setup_jwt</span>();
+
+  <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">Args::parse</span>();
+
+  <span class="kw">let</span> <span class="ident">tzone</span> <span class="op">=</span> <span class="ident">lookup</span>(<span class="ident">args</span>.<span class="ident">lat</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>(), <span class="ident">args</span>.<span class="ident">lon</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+  <span class="kw">let</span> <span class="ident">tz</span>: <span class="ident">Tz</span> <span class="op">=</span> <span class="ident">tzone</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+
+  <span class="kw">let</span> <span class="ident">utc_now</span> <span class="op">=</span> <span class="ident">Utc::now</span>();
+
+  <span class="kw">let</span> <span class="ident">resp</span> <span class="op">=</span> <span class="ident">get_weatherkit_weather</span>(<span class="ident">token</span>, <span class="ident">args</span>.<span class="ident">lat</span>, <span class="ident">args</span>.<span class="ident">lon</span>, <span class="ident">args</span>.<span class="ident">lang</span>, <span class="ident">tzone</span>, <span class="ident">utc_now</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+  
+  <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">NumberFormat::new</span>();
+
+  <span class="kw">let</span> <span class="ident">as_of_time</span> <span class="op">=</span> <span class="ident">DateTime::parse_from_rfc3339</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">as_of</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap</span>().<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">tz</span>);
+  
+  <span class="comment">// Attribution labeling required by Apple</span>
+  <span class="macro">println!</span>(<span class="string">&quot;{} daily forecast for ({}, {}) as of {}\n&quot;</span>, <span class="ident">APPLE_WEATHER_TRADEMARK</span>, <span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">metadata</span>.<span class="ident">latitude</span>, <span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">metadata</span>.<span class="ident">longitude</span>, <span class="ident">as_of_time</span>);
+  
+  <span class="comment">// TODO metric option for everything that&#39;s displayed</span>
+
+  <span class="macro">println!</span>(<span class="string">&quot; Conditions: {}&quot;</span>,         <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">condition_code</span>));
+  <span class="macro">println!</span>(<span class="string">&quot;Temperature: {}°F&quot;</span>,       <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.1f&quot;</span>, <span class="ident">c_to_f</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">temperature</span>)));
+  <span class="macro">println!</span>(<span class="string">&quot; Feels like: {}°F&quot;</span>,       <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.1f&quot;</span>, <span class="ident">c_to_f</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">temperature_apparent</span>)));
+  <span class="macro">println!</span>(<span class="string">&quot;  Dew Point: {}°F&quot;</span>,       <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.1f&quot;</span>, <span class="ident">c_to_f</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">temperature_dew_point</span>)));
+  <span class="macro">println!</span>(<span class="string">&quot;       Wind: {} mph&quot;</span>,     <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.0f&quot;</span>, <span class="ident">kmph_to_mph</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">wind_speed</span>)));
+  <span class="macro">println!</span>(<span class="string">&quot;   Pressure: {} mb ({})&quot;</span>, <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.0f&quot;</span>, <span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">pressure</span>), <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">pressure_trend</span>));
+  <span class="macro">println!</span>(<span class="string">&quot; Visibility: {} miles&quot;</span>,   <span class="ident">meters_to_miles</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">visibility</span>) <span class="kw">as</span> <span class="ident">i64</span>);
+  <span class="macro">println!</span>(<span class="string">&quot;   UV Index: {} {}&quot;</span>,      <span class="ident">uv_label</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">uv_index</span>, <span class="bool-val">true</span>), <span class="ident">uv_label</span>(<span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">uv_index</span>, <span class="bool-val">false</span>));
+  <span class="macro">println!</span>();
+
+  <span class="kw">let</span> <span class="ident">hrs</span> <span class="op">=</span> <span class="ident">resp</span>.<span class="ident">forecast_hourly</span>.<span class="ident">hours</span>;
+  
+  <span class="comment">// get max lengths of various values so we can pad properly and not too much</span>
+
+  <span class="kw">let</span> <span class="ident">max_hr_temp_len</span> <span class="op">=</span> <span class="ident">hrs</span>[<span class="number">0</span>..<span class="number">23</span>].<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">accum</span>, <span class="ident">hr</span><span class="op">|</span> {
+    <span class="kw">let</span> <span class="ident">hr_len</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.0f&quot;</span>, <span class="ident">c_to_f</span>(<span class="ident">hr</span>.<span class="ident">temperature</span>)).<span class="ident">len</span>();
+    <span class="kw">if</span> <span class="ident">accum</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">hr_len</span> { <span class="ident">accum</span> } <span class="kw">else</span> { <span class="ident">hr_len</span> }
+  });
+  
+  <span class="kw">let</span> <span class="ident">max_hr_humid_len</span> <span class="op">=</span> <span class="ident">hrs</span>[<span class="number">0</span>..<span class="number">23</span>].<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">accum</span>, <span class="ident">hr</span><span class="op">|</span> {
+    <span class="kw">let</span> <span class="ident">hr_len</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.0f&quot;</span>, <span class="ident">hr</span>.<span class="ident">humidity</span> <span class="op">*</span> <span class="number">100.0</span>).<span class="ident">len</span>();
+    <span class="kw">if</span> <span class="ident">accum</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">hr_len</span> { <span class="ident">accum</span> } <span class="kw">else</span> { <span class="ident">hr_len</span> }
+  });
+
+  <span class="kw">let</span> <span class="ident">max_hr_condiiton_len</span> <span class="op">=</span> <span class="ident">hrs</span>[<span class="number">0</span>..<span class="number">23</span>].<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">accum</span>, <span class="ident">hr</span><span class="op">|</span> {
+    <span class="kw">let</span> <span class="ident">hr_len</span> <span class="op">=</span> <span class="ident">condition_code</span>(<span class="kw-2">&amp;</span><span class="ident">hr</span>.<span class="ident">condition_code</span>).<span class="ident">len</span>();
+    <span class="kw">if</span> <span class="ident">accum</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">hr_len</span> { <span class="ident">accum</span> } <span class="kw">else</span> { <span class="ident">hr_len</span> }
+  });
+   
+  <span class="comment">// keep track of day&#39;s we&#39;ve seen &amp; printed so we don&#39;t print them more than once</span>
+
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">day_set</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashSet::new</span>();
+
+  <span class="kw">for</span> <span class="ident">idx</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">hrs</span>[<span class="number">0</span>..<span class="number">23</span>].<span class="ident">len</span>() {
+
+    <span class="kw">let</span> <span class="ident">hour</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">hrs</span>[<span class="ident">idx</span>];
+  
+    <span class="kw">let</span> <span class="ident">utc_fcast_time</span> <span class="op">=</span> <span class="ident">DateTime::parse_from_rfc3339</span>(<span class="ident">hour</span>.<span class="ident">forecast_start</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">local_time</span> <span class="op">=</span> <span class="ident">utc_fcast_time</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">tz</span>);
+    <span class="kw">let</span> <span class="ident">weekday</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">local_time</span>.<span class="ident">weekday</span>()).<span class="ident">pad_to_width_with_alignment</span>(<span class="number">5</span>, <span class="ident">Alignment::Right</span>);
+    <span class="kw">let</span> <span class="ident">printed_str</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">local_time</span>.<span class="ident">date</span>() <span class="op">==</span> <span class="ident">utc_now</span>.<span class="ident">date</span>() { <span class="string">&quot;Today&quot;</span> } <span class="kw">else</span> { <span class="ident">weekday</span>.<span class="ident">as_str</span>() };
+
+    <span class="macro">println!</span>(
+      <span class="string">&quot;{} @ {}:00 │ 🌡  {}°F │ 💦 {}% │ {} mb {} │ {} │ {} │ {}&quot;</span>,
+      <span class="kw">if</span> <span class="ident">day_set</span>.<span class="ident">contains</span>(<span class="ident">printed_str</span>) { <span class="string">&quot;     &quot;</span> } <span class="kw">else</span> { <span class="ident">printed_str</span> },
+      <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;02d&quot;</span>, <span class="ident">local_time</span>.<span class="ident">hour</span>()),
+      <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.0f&quot;</span>, <span class="ident">c_to_f</span>(<span class="ident">hour</span>.<span class="ident">temperature</span>)).<span class="ident">pad_to_width_with_alignment</span>(<span class="ident">max_hr_temp_len</span>, <span class="ident">Alignment::Right</span>),
+      <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;.0f&quot;</span>, <span class="ident">hour</span>.<span class="ident">humidity</span> <span class="op">*</span> <span class="number">100.0</span>).<span class="ident">pad_to_width_with_alignment</span>(<span class="ident">max_hr_humid_len</span>, <span class="ident">Alignment::Right</span>),
+      <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;4.0f&quot;</span>, <span class="ident">hour</span>.<span class="ident">pressure</span>),
+      <span class="ident">pressure_trend</span>(<span class="kw-2">&amp;</span><span class="ident">hour</span>.<span class="ident">pressure_trend</span>),
+      <span class="ident">precip_type</span>(<span class="kw-2">&amp;</span><span class="ident">hour</span>.<span class="ident">precipitation_type</span>, <span class="ident">hour</span>.<span class="ident">daylight</span>),
+      <span class="ident">condition_code</span>(<span class="kw-2">&amp;</span><span class="ident">hour</span>.<span class="ident">condition_code</span>).<span class="ident">pad_to_width</span>(<span class="ident">max_hr_condiiton_len</span>),
+      <span class="ident">uv_label</span>(<span class="ident">hour</span>.<span class="ident">uv_index</span>, <span class="bool-val">true</span>)
+    );
+
+    <span class="ident">day_set</span>.<span class="ident">insert</span>(<span class="ident">printed_str</span>.<span class="ident">to_string</span>());
+    
+  }
+  
+  <span class="macro">println!</span>();
+
+  <span class="kw">let</span> <span class="ident">days</span> <span class="op">=</span> <span class="ident">resp</span>.<span class="ident">forecast_daily</span>.<span class="ident">days</span>;
+
+  <span class="comment">// get all the info we need to rescale the temp ranges to 1..30 (# chars in the fake bars)</span>
+
+  <span class="kw">let</span> <span class="ident">min_temps</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">days</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">c_to_f</span>(<span class="ident">d</span>.<span class="ident">temperature_min</span>) <span class="kw">as</span> <span class="ident">i64</span>).<span class="ident">collect</span>();
+  <span class="kw">let</span> <span class="ident">max_temps</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">days</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">c_to_f</span>(<span class="ident">d</span>.<span class="ident">temperature_max</span>) <span class="kw">as</span> <span class="ident">i64</span>).<span class="ident">collect</span>();
+
+  <span class="kw">let</span> <span class="ident">min_temp</span> <span class="op">=</span> <span class="ident">min_temps</span>.<span class="ident">iter</span>().<span class="ident">min</span>().<span class="ident">expect</span>(<span class="string">&quot;INCOSPIGLE!&quot;</span>);
+  <span class="kw">let</span> <span class="ident">max_temp</span> <span class="op">=</span> <span class="ident">max_temps</span>.<span class="ident">iter</span>().<span class="ident">max</span>().<span class="ident">expect</span>(<span class="string">&quot;INCOSPIGLE!&quot;</span>);
+
+  <span class="kw">let</span> <span class="ident">max_day_temp_len</span> <span class="op">=</span> <span class="ident">days</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">accum</span>, <span class="ident">day</span><span class="op">|</span> {
+    <span class="kw">let</span> <span class="ident">day_len</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;d&quot;</span>, <span class="ident">c_to_f</span>(<span class="ident">day</span>.<span class="ident">temperature_max</span>) <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">len</span>();
+    <span class="kw">if</span> <span class="ident">accum</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">day_len</span> { <span class="ident">accum</span> } <span class="kw">else</span> { <span class="ident">day_len</span> }
+  });
+
+  <span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="string">&quot;▆&quot;</span>;
+
+  <span class="kw">for</span> <span class="ident">idx</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">days</span>.<span class="ident">len</span>() {
+
+    <span class="kw">let</span> <span class="ident">day</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">days</span>[<span class="ident">idx</span>];
+
+    <span class="kw">let</span> <span class="ident">utc_fcast_time</span> <span class="op">=</span> <span class="ident">DateTime::parse_from_rfc3339</span>(<span class="ident">day</span>.<span class="ident">forecast_start</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">local_time</span> <span class="op">=</span> <span class="ident">utc_fcast_time</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">tz</span>);
+    <span class="kw">let</span> <span class="ident">weekday</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">local_time</span>.<span class="ident">weekday</span>()).<span class="ident">pad_to_width_with_alignment</span>(<span class="number">5</span>, <span class="ident">Alignment::Right</span>);
+    <span class="kw">let</span> <span class="ident">weekday_str</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">local_time</span>.<span class="ident">date</span>() <span class="op">==</span> <span class="ident">utc_now</span>.<span class="ident">date</span>() { <span class="string">&quot;Today&quot;</span> } <span class="kw">else</span> { <span class="ident">weekday</span>.<span class="ident">as_str</span>() };
+
+    <span class="kw">let</span> <span class="ident">day_min</span> <span class="op">=</span> <span class="ident">c_to_f</span>(<span class="ident">day</span>.<span class="ident">temperature_min</span>) <span class="kw">as</span> <span class="ident">i32</span>;
+    <span class="kw">let</span> <span class="ident">day_max</span> <span class="op">=</span> <span class="ident">c_to_f</span>(<span class="ident">day</span>.<span class="ident">temperature_max</span>) <span class="kw">as</span> <span class="ident">i32</span>;
+    <span class="kw">let</span> <span class="ident">day_min_scaled</span> <span class="op">=</span> <span class="ident">rescale_val</span>(<span class="ident">day_min</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="kw-2">*</span><span class="ident">min_temp</span>, <span class="kw-2">*</span><span class="ident">max_temp</span>, <span class="number">1</span>, <span class="number">30</span>);
+    <span class="kw">let</span> <span class="ident">day_max_scaled</span> <span class="op">=</span> <span class="ident">rescale_val</span>(<span class="ident">day_max</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="kw-2">*</span><span class="ident">min_temp</span>, <span class="kw-2">*</span><span class="ident">max_temp</span>, <span class="number">1</span>, <span class="number">30</span>);
+
+    <span class="macro">print!</span>(
+      <span class="string">&quot;{} {}°F &quot;</span>, 
+      <span class="ident">weekday_str</span>,
+      <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;d&quot;</span>, <span class="ident">day_min</span>).<span class="ident">pad_to_width_with_alignment</span>(<span class="ident">max_day_temp_len</span>, <span class="ident">Alignment::Right</span>),
+    );
+
+    <span class="kw">for</span> <span class="ident">cell</span> <span class="kw">in</span> <span class="number">1</span>..<span class="number">30</span> {
+      <span class="kw">if</span> <span class="ident">cell</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">day_min_scaled</span> <span class="op">&amp;&amp;</span> <span class="ident">cell</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">day_max_scaled</span> {
+        <span class="macro">print!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">block</span>.<span class="ident">color</span>(<span class="string">&quot;yellow&quot;</span>));
+      } <span class="kw">else</span> {
+        <span class="macro">print!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">block</span>.<span class="ident">color</span>(<span class="string">&quot;bright black&quot;</span>));
+      }
+    }
+    
+    <span class="macro">println!</span>(
+      <span class="string">&quot; {}°F {} {}&quot;</span>,
+      <span class="ident">num</span>.<span class="ident">format</span>(<span class="string">&quot;d&quot;</span>, <span class="ident">day_max</span>).<span class="ident">pad_to_width_with_alignment</span>(<span class="ident">max_day_temp_len</span>, <span class="ident">Alignment::Left</span>),
+      <span class="ident">uv_label</span>(<span class="ident">day</span>.<span class="ident">max_uv_index</span>, <span class="bool-val">true</span>),
+      <span class="ident">condition_code</span>(<span class="kw-2">&amp;</span><span class="ident">day</span>.<span class="ident">condition_code</span>)
+    );
+
+  }
+
+  <span class="macro">println!</span>();
+
+  <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">resp</span>.<span class="ident">current_weather</span>.<span class="ident">metadata</span>.<span class="ident">attribution_url</span>); <span class="comment">// Attribution labeling required by Apple</span>
+
+  <span class="prelude-val">Ok</span>(())
+  
+}
+</code></pre></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="weatherkit" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
+    <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script>
+</body></html>

@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["APPLE_WEATHER_TRADEMARK",""]],"fn":[["get_weatherkit_weather","Retrieve weather data from Apple’s WeatherKit REST API"],["main",""],["setup_jwt","Setup the JSON Web Token from the required environment variables."]],"mod":[["utils",""],["weatherkitweather",""]],"struct":[["Args",""]]});

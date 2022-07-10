@@ -105,7 +105,7 @@ fn setup_jwt() -> String {
 /// 
 /// # Arguments
 /// 
-/// - `token` - JWT from [setup_jtw()] call
+/// - `token` - JWT from [setup_jwt()] call
 /// - `latitude` - latitude
 /// - `longitude` - longitude
 /// - `language` - language code

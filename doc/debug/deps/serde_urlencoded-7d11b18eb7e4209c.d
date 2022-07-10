@@ -1,0 +1,11 @@
+/Users/hrbrmstr/Development/weatherkit-rust/./doc/debug/deps/serde_urlencoded-7d11b18eb7e4209c.rmeta: /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/lib.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/de.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/mod.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/key.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/pair.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/part.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/value.rs
+
+/Users/hrbrmstr/Development/weatherkit-rust/./doc/debug/deps/serde_urlencoded-7d11b18eb7e4209c.d: /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/lib.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/de.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/mod.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/key.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/pair.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/part.rs /Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/value.rs
+
+/Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/lib.rs:
+/Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/de.rs:
+/Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/mod.rs:
+/Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/key.rs:
+/Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/pair.rs:
+/Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/part.rs:
+/Users/hrbrmstr/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_urlencoded-0.7.1/src/ser/value.rs:
