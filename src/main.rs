@@ -712,8 +712,11 @@ async fn main() -> Result<(), reqwest::Error> {
   let resp = call.send().await?.json::<WeatherKitWeather>().await?;
   
   let num = NumberFormat::new();
+
+  let tz: Tz = tzone.parse().unwrap();
+  let as_of_time = DateTime::parse_from_rfc3339(resp.current_weather.as_of.as_str()).unwrap().with_timezone(&tz);
   
-  println!("{} daily forecast for ({}, {}) as of {}\n", APPLE_WEATHER_TRADEMARK, resp.current_weather.metadata.latitude, resp.current_weather.metadata.longitude, resp.current_weather.as_of);
+  println!("{} daily forecast for ({}, {}) as of {}\n", APPLE_WEATHER_TRADEMARK, resp.current_weather.metadata.latitude, resp.current_weather.metadata.longitude, as_of_time);
   
   println!(" Conditions: {}",          format!("{:?}", resp.current_weather.condition_code));
   println!("Temperature: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature)));
@@ -721,7 +724,7 @@ async fn main() -> Result<(), reqwest::Error> {
   println!("  Dew Point: {}°F",        num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
   println!("       Wind: {} mph",      num.format(".0f", kmph_to_mph(resp.current_weather.wind_speed)));
   println!("   Pressure: {} mb ({})",  num.format(".0f", resp.current_weather.pressure), format!("{:?}", resp.current_weather.pressure_trend));
-  println!(" Visibility: {} miles",    meters_to_miles(resp.current_weather.wind_speed) as i64);
+  println!(" Visibility: {} miles",    meters_to_miles(resp.current_weather.visibility) as i64);
   println!("   UV Index: {} {}",       uv_label(resp.current_weather.uv_index, true), uv_label(resp.current_weather.uv_index, false));
   println!();
 
@@ -741,8 +744,6 @@ async fn main() -> Result<(), reqwest::Error> {
     let hr_len = condition_code(&hr.condition_code).len();
     if accum >= hr_len { accum } else { hr_len }
   });
-
-  let tz: Tz = tzone.parse().unwrap();
    
   let mut day_set: HashSet<String> = HashSet::new();
 
