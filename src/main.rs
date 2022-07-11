@@ -31,6 +31,8 @@ use colored::{*};
 
 use clap::{Parser};
 
+/// Mandatory Apple Weather trademark. The Apple glyph is a pain
+/// to type so this makes it a bit easier to handle
 const APPLE_WEATHER_TRADEMARK: &'static str = " Weather";
 
 #[derive(Parser, Debug)]
@@ -137,6 +139,9 @@ async fn get_weatherkit_weather(token: String,
 
 }
 
+/// Print everything
+/// 
+/// Setup the JWT, parse the cmdline args, estimate timezone, get the weather, print all the things.
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
 
@@ -160,7 +165,7 @@ async fn main() -> Result<(), reqwest::Error> {
   
   // TODO metric option for everything that's displayed
 
-  println!(" Conditions: {}",         format!("{:?}", resp.current_weather.condition_code));
+  println!(" Conditions: {}",         format!("{:?}", condition_code(&resp.current_weather.condition_code)));
   println!("Temperature: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature)));
   println!(" Feels like: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_apparent)));
   println!("  Dew Point: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
@@ -190,7 +195,6 @@ async fn main() -> Result<(), reqwest::Error> {
   });
    
   // keep track of day's we've seen & printed so we don't print them more than once
-
   let mut day_set: HashSet<String> = HashSet::new();
 
   for idx in 0..hrs[0..23].len() {
@@ -247,7 +251,7 @@ async fn main() -> Result<(), reqwest::Error> {
     let weekday = format!("{}", local_time.weekday()).pad_to_width_with_alignment(5, Alignment::Right);
     let weekday_str = if local_time.date() == utc_now.date() { "Today" } else { weekday.as_str() };
 
-    let day_min = c_to_f(day.temperature_min) as i32;
+    let day_min = c_to_f(day.temperature_min) as i32; // num.format doesn't like i64
     let day_max = c_to_f(day.temperature_max) as i32;
     let day_min_scaled = rescale_val(day_min as i64, *min_temp, *max_temp, 1, 30);
     let day_max_scaled = rescale_val(day_max as i64, *min_temp, *max_temp, 1, 30);

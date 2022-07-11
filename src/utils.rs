@@ -13,7 +13,7 @@ pub fn meters_to_miles(meters: f64) -> i64 {
   (meters * 0.000621) as i64
 }
 
-// Convert kilometers per hour to miles per houe
+/// Convert kilometers per hour to miles per hour
 pub fn kmph_to_mph(kmph: f64) -> f64 {
   kmph * 0.539593 * 1.1507794
 }
