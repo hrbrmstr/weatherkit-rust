@@ -165,7 +165,7 @@ async fn main() -> Result<(), reqwest::Error> {
   
   // TODO metric option for everything that's displayed
 
-  println!(" Conditions: {}",         format!("{:?}", condition_code(&resp.current_weather.condition_code)));
+  println!(" Conditions: {}",         format!("{}", condition_code(&resp.current_weather.condition_code)));
   println!("Temperature: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature)));
   println!(" Feels like: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_apparent)));
   println!("  Dew Point: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
