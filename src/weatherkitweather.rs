@@ -197,10 +197,10 @@ pub struct Day {
   pub max_uv_index: f64,
   
   #[serde(rename = "moonPhase")]
-  pub moon_phase: MoonPhase,
+  pub moon_phase: Option<MoonPhase>,
   
   #[serde(rename = "moonrise")]
-  pub moonrise: String,
+  pub moonrise: Option<String>,
   
   #[serde(rename = "moonset")]
   pub moonset: String,
