@@ -233,7 +233,7 @@ pub struct Day {
   pub sunrise_nautical: String,
   
   #[serde(rename = "sunriseAstronomical")]
-  pub sunrise_astronomical: String,
+  pub sunrise_astronomical: Option<String>,
   
   #[serde(rename = "sunset")]
   pub sunset: String,
@@ -245,7 +245,7 @@ pub struct Day {
   pub sunset_nautical: String,
   
   #[serde(rename = "sunsetAstronomical")]
-  pub sunset_astronomical: String,
+  pub sunset_astronomical: Option<String>,
   
   #[serde(rename = "temperatureMax")]
   pub temperature_max: f64,
