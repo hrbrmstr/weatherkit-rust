@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.1.0...v0.2.0) (2022-07-12)
+
+
+### Features
+
+* placename lookup ([c35fad4](https://github.com/hrbrmstr/weatherkit-rust/commit/c35fad4b3b046fa73af663eab346bbd3ef3c2e72))
+
 ## 0.1.0 (2022-07-10)
 
 
