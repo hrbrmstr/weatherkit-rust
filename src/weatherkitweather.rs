@@ -83,7 +83,7 @@ pub struct HourWeatherconditions {
   pub condition_code: ConditionCode,
   
   #[serde(rename = "daylight")]
-  pub daylight: bool,
+  pub daylight: bool, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "humidity")]
   pub humidity: f64,
@@ -95,7 +95,7 @@ pub struct HourWeatherconditions {
   pub pressure: f64,
   
   #[serde(rename = "pressureTrend")]
-  pub pressure_trend: PressureTrend,
+  pub pressure_trend: PressureTrend, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "temperature")]
   pub temperature: f64,
@@ -104,7 +104,7 @@ pub struct HourWeatherconditions {
   pub temperature_apparent: f64,
   
   #[serde(rename = "temperatureDewPoint")]
-  pub temperature_dew_point: f64,
+  pub temperature_dew_point: f64, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "uvIndex")]
   pub uv_index: f64,
@@ -113,10 +113,10 @@ pub struct HourWeatherconditions {
   pub visibility: f64,
   
   #[serde(rename = "windDirection")]
-  pub wind_direction: f64,
+  pub wind_direction: f64, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "windGust")]
-  pub wind_gust: f64,
+  pub wind_gust: f64, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "windSpeed")]
   pub wind_speed: f64,
@@ -125,7 +125,7 @@ pub struct HourWeatherconditions {
   pub forecast_start: String,
   
   #[serde(rename = "precipitationAmount")]
-  pub precipitation_amount: f64,
+  pub precipitation_amount: f64, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "precipitationChance")]
   pub precipitation_chance: f64,
@@ -134,7 +134,7 @@ pub struct HourWeatherconditions {
   pub precipitation_type: PrecipitationType,
   
   #[serde(rename = "snowfallIntensity")]
-  pub snowfall_intensity: f64,
+  pub snowfall_intensity: f64, // TODO: CAN BE OPTIONAL
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -203,7 +203,7 @@ pub struct Day {
   pub moonrise: Option<String>,
   
   #[serde(rename = "moonset")]
-  pub moonset: String,
+  pub moonset: Option<String>,
   
   #[serde(rename = "precipitationAmount")]
   pub precipitation_amount: f64,
@@ -218,31 +218,31 @@ pub struct Day {
   pub snowfall_amount: f64,
   
   #[serde(rename = "solarMidnight")]
-  pub solar_midnight: String,
+  pub solar_midnight: Option<String>,
   
   #[serde(rename = "solarNoon")]
-  pub solar_noon: String,
+  pub solar_noon: Option<String>,
   
   #[serde(rename = "sunrise")]
-  pub sunrise: String,
+  pub sunrise: Option<String>,
   
   #[serde(rename = "sunriseCivil")]
-  pub sunrise_civil: String,
+  pub sunrise_civil: Option<String>,
   
   #[serde(rename = "sunriseNautical")]
-  pub sunrise_nautical: String,
+  pub sunrise_nautical: Option<String>,
   
   #[serde(rename = "sunriseAstronomical")]
   pub sunrise_astronomical: Option<String>,
   
   #[serde(rename = "sunset")]
-  pub sunset: String,
+  pub sunset: Option<String>,
   
   #[serde(rename = "sunsetCivil")]
-  pub sunset_civil: String,
+  pub sunset_civil: Option<String>,
   
   #[serde(rename = "sunsetNautical")]
-  pub sunset_nautical: String,
+  pub sunset_nautical: Option<String>,
   
   #[serde(rename = "sunsetAstronomical")]
   pub sunset_astronomical: Option<String>,
@@ -254,7 +254,7 @@ pub struct Day {
   pub temperature_min: f64,
   
   #[serde(rename = "daytimeForecast")]
-  pub daytime_forecast: Forecast,
+  pub daytime_forecast: Option<Forecast>,
   
   #[serde(rename = "overnightForecast")]
   pub overnight_forecast: Option<Forecast>,
@@ -272,7 +272,7 @@ pub struct Forecast {
   pub forecast_end: String,
   
   #[serde(rename = "cloudCover")]
-  pub cloud_cover: f64,
+  pub cloud_cover: f64, 
   
   #[serde(rename = "conditionCode")]
   pub condition_code: ConditionCode,
@@ -293,7 +293,7 @@ pub struct Forecast {
   pub snowfall_amount: f64,
   
   #[serde(rename = "windDirection")]
-  pub wind_direction: f64,
+  pub wind_direction: Option<f64>,
   
   #[serde(rename = "windSpeed")]
   pub wind_speed: f64,

@@ -2,7 +2,6 @@
 // use log::{info, trace, warn};
 
 use std::time::{UNIX_EPOCH, SystemTime};
-use std::fs;
 use std::io::Read;
 use std::io::BufReader;
 use std::fs::File;
@@ -10,8 +9,6 @@ use std::env;
 use std::collections::HashSet;
 
 use serde_json::json;
-use serde::{Serialize, Deserialize};
-use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 use jsonwebtokens as jwt;
 use jwt::{Algorithm, AlgorithmID, encode};
@@ -31,10 +28,11 @@ use colored::{*};
 
 use clap::{Parser};
 
-use app_dirs2::{AppDataType, AppInfo, get_app_dir};
-
 mod weatherkitweather;
 use weatherkitweather::{*};
+
+mod placename;
+use placename::{*};
 
 mod utils;
 use utils::{*};
@@ -42,11 +40,6 @@ use utils::{*};
 /// Mandatory Apple Weather trademark. The Apple glyph is a pain
 /// to type so this makes it a bit easier to handle
 const APPLE_WEATHER_TRADEMARK: &'static str = " Weather";
-
-const WEATHERKIT_APP_INFO: AppInfo = AppInfo {
-    name: "weatherkit-rust",
-    author: "@hrbrmstr",
-};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -155,114 +148,6 @@ fn get_weatherkit_weather(token: String,
 
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PlaceName {
-  #[serde(rename = "place_name")]
-  pub place_name: String,
-  
-  #[serde(rename = "dmslat")]
-  pub dms_lat: String,
-  
-  #[serde(rename = "dmslng")]
-  pub dms_lng: String,
-}
-
-fn lookup_placename(lat: f64,
-                    lng: f64) -> PlaceName {
-  
-  let url = "https://latlon.top/index/reverse";
-  
-  let builder =  reqwest::blocking::ClientBuilder::new();
-  let client = builder.connection_verbose(true).build().expect("Could not build client");
-  
-  let bdy = format!("{{ \"lat\": {}, \"lng\": {} }}", lat, lng).to_string();
-  let resp = client
-    .post(url)
-    .body(bdy)
-    .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15")
-    .header("Content-Type", "application/json")
-    .header("Accept", "application/json")
-    .header("Origin", "https://latlon.top")
-    .header("Referer", "https://latlon.top/index.php")
-    .send();
-
-  match resp {
-    Ok(response) => {
-      let placename = response.json::<PlaceName>();
-      match placename {
-        Ok(pn) => return pn,
-        Err(_) => return PlaceName {
-          place_name:  format!("({}, {})", lat, lng).to_string(),
-          dms_lat: lat.to_string(),
-          dms_lng: lng.to_string()
-        }
-      };
-    },
-    Err(_) => return PlaceName {
-      place_name: format!("({}, {})", lat, lng).to_string(),
-      dms_lat: lat.to_string(),
-      dms_lng: lng.to_string()
-    }
-  };
-
-}
-
-#[derive(Serialize, Deserialize)]
-struct Place {
-  name: String
-}
-
-fn get_placename(lat: f64, lon: f64) -> String {
-
-  let ll_key = format!("{};{}", lat, lon).to_string();
-
-  let app_dir = get_app_dir(AppDataType::UserCache, &WEATHERKIT_APP_INFO, "").expect("Error finding application cache directory.");
-
-  let db_path = app_dir.with_file_name("weatherkit-rust/placenames.db");
-  
-  fs::create_dir_all(app_dir).expect("Error locating or creating application cache directory."); 
-
-  let mut db: PickleDb;
-
-  if !db_path.exists() {
-
-    db = PickleDb::new(
-      db_path,
-      PickleDbDumpPolicy::DumpUponRequest,
-      SerializationMethod::Json,
-    );
-
-  } else {
-
-    db = PickleDb::load(
-      db_path,
-      PickleDbDumpPolicy::AutoDump,
-      SerializationMethod::Json,
-    ).expect("Error loading application cache.");
-
-  }
-
-  #[allow(unused_mut)]
-  let mut place: String;
-
-  if db.exists(ll_key.as_str()) {
-
-    place = db.get::<String>(ll_key.as_str()).unwrap();
-
-  } else {
-
-    let resp = lookup_placename(lat, lon);
-
-    place = resp.place_name;
-
-    db.set(ll_key.as_str(), &place).unwrap();
-
-  }
-
-  place.to_owned()
-
-}
-
 /// Print everything
 /// 
 /// Setup the JWT, parse the cmdline args, estimate timezone, get the weather, print all the things.
@@ -277,15 +162,7 @@ fn main() {
   let lat = args.lat;
   let lon = args.lon;
   
-  let mut place = get_placename(lat.parse().unwrap(), lon.parse().unwrap());
-  if !place.contains("(") {
-    let split = place.split(", ");
-    let place_parts: Vec<&str> = split.collect();
-    let len = place_parts.len();
-    if len >= 4 {
-      place = [ place_parts[len-4], place_parts[len-3] ].join(", ");
-    }
-  };
+  let place = get_placename(lat.parse().unwrap(), lon.parse().unwrap());
   
   let tzone = lookup(lat.parse().unwrap(), lon.parse().unwrap()).unwrap();
   let tz: Tz = tzone.parse().unwrap();
