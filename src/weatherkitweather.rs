@@ -373,6 +373,9 @@ pub enum ConditionCode {
   #[serde(rename = "PartlyCloudy")]
   PartlyCloudy,
   
+  #[serde(rename = "Thunderstorms")]
+  Thunderstorms,
+  
   #[serde(rename = "ScatteredThunderstorms")]
   ScatteredThunderstorms,
   
@@ -604,6 +607,7 @@ pub fn condition_code(cond: &ConditionCode) -> String {
     ConditionCode::Rain => "Rain",
     ConditionCode::ScatteredShowers => "Scattered Showers",
     ConditionCode::ScatteredSnowShowers => "Scattered Snow Showers",
+    ConditionCode::Thunderstorms => "Scattered Thunderstorms",
     ConditionCode::ScatteredThunderstorms => "Scattered Thunderstorms",
     ConditionCode::SevereThunderstorm => "Severe Thunderstorm",
     ConditionCode::Showers => "Showers",
