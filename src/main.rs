@@ -221,16 +221,19 @@ fn main() {
     let local_time = utc_fcast_time.with_timezone(&tz);
     let weekday = format!("{}", local_time.weekday()).pad_to_width_with_alignment(5, Alignment::Right);
     let printed_str = if local_time.date() == utc_now.date() { "Today" } else { weekday.as_str() };
-
-    println!(
+    
+        println!(
       "{} @ {}:00 │ 🌡  {}°F │ 💦 {}% │ {} mb {} │ {} │ {} │ {}",
       if day_set.contains(printed_str) { "     " } else { printed_str },
       num.format("02d", local_time.hour()),
       num.format(".0f", c_to_f(hour.temperature)).pad_to_width_with_alignment(max_hr_temp_len, Alignment::Right),
       num.format(".0f", hour.humidity * 100.0).pad_to_width_with_alignment(max_hr_humid_len, Alignment::Right),
       num.format("4.0f", hour.pressure),
-      pressure_trend(&hour.pressure_trend),
-      precip_type(&hour.precipitation_type, hour.daylight),
+      match &hour.pressure_trend {
+        Some(trend) => pressure_trend(trend),
+        None => " ".to_string()
+      },
+      precip_type(&hour.precipitation_type, match hour.daylight { Some(dl) => dl, None => true }),
       condition_code(&hour.condition_code).pad_to_width(max_hr_condiiton_len),
       uv_label(hour.uv_index, true)
     );

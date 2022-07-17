@@ -83,7 +83,7 @@ pub struct HourWeatherconditions {
   pub condition_code: ConditionCode,
   
   #[serde(rename = "daylight")]
-  pub daylight: bool, // TODO: CAN BE OPTIONAL
+  pub daylight: Option<bool>, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "humidity")]
   pub humidity: f64,
@@ -95,7 +95,7 @@ pub struct HourWeatherconditions {
   pub pressure: f64,
   
   #[serde(rename = "pressureTrend")]
-  pub pressure_trend: PressureTrend, // TODO: CAN BE OPTIONAL
+  pub pressure_trend: Option<PressureTrend>, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "temperature")]
   pub temperature: f64,
@@ -104,7 +104,7 @@ pub struct HourWeatherconditions {
   pub temperature_apparent: f64,
   
   #[serde(rename = "temperatureDewPoint")]
-  pub temperature_dew_point: f64, // TODO: CAN BE OPTIONAL
+  pub temperature_dew_point: Option<f64>, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "uvIndex")]
   pub uv_index: f64,
@@ -113,10 +113,10 @@ pub struct HourWeatherconditions {
   pub visibility: f64,
   
   #[serde(rename = "windDirection")]
-  pub wind_direction: f64, // TODO: CAN BE OPTIONAL
+  pub wind_direction: Option<f64>, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "windGust")]
-  pub wind_gust: f64, // TODO: CAN BE OPTIONAL
+  pub wind_gust: Option<f64>, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "windSpeed")]
   pub wind_speed: f64,
@@ -125,7 +125,7 @@ pub struct HourWeatherconditions {
   pub forecast_start: String,
   
   #[serde(rename = "precipitationAmount")]
-  pub precipitation_amount: f64, // TODO: CAN BE OPTIONAL
+  pub precipitation_amount: Option<f64>, // TODO: CAN BE OPTIONAL
   
   #[serde(rename = "precipitationChance")]
   pub precipitation_chance: f64,
@@ -134,7 +134,7 @@ pub struct HourWeatherconditions {
   pub precipitation_type: PrecipitationType,
   
   #[serde(rename = "snowfallIntensity")]
-  pub snowfall_intensity: f64, // TODO: CAN BE OPTIONAL
+  pub snowfall_intensity: Option<f64>, // TODO: CAN BE OPTIONAL
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -518,7 +518,7 @@ pub enum MoonPhase {
   #[serde(rename="thirdQuarter")]
   ThirdQuarter,
   
-  #[serde(rename="seconduarter")]
+  #[serde(rename="secondQuarter")]
   SecondQuarter,
   
   #[serde(rename="new")]
