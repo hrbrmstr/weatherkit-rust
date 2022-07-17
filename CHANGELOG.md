@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.1...v0.2.2) (2022-07-17)
+
+
+### Bug Fixes
+
+* missed an enum ([6352261](https://github.com/hrbrmstr/weatherkit-rust/commit/6352261cedecfdca464364a9ee536fe3493e9b1a))
+
 ## [0.2.1](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.0...v0.2.1) (2022-07-17)
 
 
