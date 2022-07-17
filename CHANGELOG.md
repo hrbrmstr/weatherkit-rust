@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.0...v0.2.1) (2022-07-17)
+
+
+### Bug Fixes
+
+* handful of JSON elements needed to be Option-al ([d8994c1](https://github.com/hrbrmstr/weatherkit-rust/commit/d8994c1b14dad03634645bb74625d5d2da879490))
+
 ## [0.2.0](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.1.0...v0.2.0) (2022-07-12)
 
 
