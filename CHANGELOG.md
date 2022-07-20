@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.2...v0.2.3) (2022-07-20)
+
+
+### Bug Fixes
+
+* Missed some or there are new enumerations from Apple ([4becc32](https://github.com/hrbrmstr/weatherkit-rust/commit/4becc32c6831560f8d75ce98d8900a0b61d767ab))
+
 ## [0.2.2](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.1...v0.2.2) (2022-07-17)
 
 
