@@ -360,6 +360,9 @@ pub enum ConditionCode {
   
   #[serde(rename = "Fog")]
   Fog,
+
+  #[serde(rename = "Foggy")]
+  Foggy,
   
   #[serde(rename = "Haze")]
   Haze,
@@ -587,13 +590,14 @@ pub fn condition_code(cond: &ConditionCode) -> String {
     ConditionCode::Dust => "Dust",
     ConditionCode::Flurries => "Flurries",
     ConditionCode::Fog => "Fog",
+    ConditionCode::Foggy => "Foggy",
     ConditionCode::FreezingDrizzle => "Freezing Drizzle",
     ConditionCode::FreezingRain => "Freezing Rain",
     ConditionCode::Frigid => "Frigid",
     ConditionCode::Hail => "Hail",
     ConditionCode::Haze => "Haze",
-    ConditionCode::HeavyRain => "HeavyRain",
-    ConditionCode::HeavySnow => "HeavySnow",
+    ConditionCode::HeavyRain => "Heavy Rain",
+    ConditionCode::HeavySnow => "Heavy Snow",
     ConditionCode::Hot => "Hot",
     ConditionCode::Hurricane => "Hurricane",
     ConditionCode::IsolatedThunderstorms => "Isolated Thunderstorms",
