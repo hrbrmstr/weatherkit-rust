@@ -13,6 +13,9 @@ pub struct WeatherKitWeather {
   
   #[serde(rename = "forecastNextHour")]
   pub forecast_next_hour: Option<ForecastNextHour>,
+
+ #[serde(rename = "weatherAlerts")]
+  pub weather_alerts: Option<WeatherAlerts>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -158,7 +161,7 @@ pub struct Metadata {
   pub reported_time: Option<String>,
   
   #[serde(rename = "units")]
-  pub units: String,
+  pub units: Option<String>,
   
   #[serde(rename = "version")]
   pub version: f64,
@@ -625,4 +628,92 @@ pub fn condition_code(cond: &ConditionCode) -> String {
     ConditionCode::Windy => "Windy"
   })
   
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct WeatherAlerts {
+    #[serde(rename = "name")]
+    pub name: String,
+
+    #[serde(rename = "metadata")]
+    pub metadata: Metadata,
+
+    #[serde(rename = "detailsUrl")]
+    pub details_url: String,
+
+    #[serde(rename = "alerts")]
+    pub alerts: Vec<Alert>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Alert {
+    #[serde(rename = "name")]
+    pub name: String,
+
+    #[serde(rename = "id")]
+    pub id: String,
+
+    #[serde(rename = "areaId")]
+    pub area_id: String,
+
+    #[serde(rename = "areaName")]
+    pub area_name: String,
+
+    #[serde(rename = "countryCode")]
+    pub country_code: String,
+
+    #[serde(rename = "description")]
+    pub description: String,
+
+    #[serde(rename = "effectiveTime")]
+    pub effective_time: String,
+
+    #[serde(rename = "expireTime")]
+    pub expire_time: String,
+
+    #[serde(rename = "issuedTime")]
+    pub issued_time: String,
+
+    #[serde(rename = "eventEndTime")]
+    pub event_end_time: String,
+
+    #[serde(rename = "detailsUrl")]
+    pub details_url: String,
+
+    #[serde(rename = "precedence")]
+    pub precedence: i64,
+
+    #[serde(rename = "severity")]
+    pub severity: String,
+
+    #[serde(rename = "source")]
+    pub source: String,
+
+    #[serde(rename = "eventSource")]
+    pub event_source: String,
+
+    #[serde(rename = "urgency")]
+    pub urgency: String,
+
+    #[serde(rename = "certainty")]
+    pub certainty: String,
+
+    #[serde(rename = "importance")]
+    pub importance: String,
+
+    #[serde(rename = "responses")]
+    pub responses: Vec<Option<serde_json::Value>>,
+}
+
+
+pub fn severity_trans(severity: String) -> String {
+
+  String::from(match severity.as_str() {
+     "extreme" =>   "🔴 Extreme (Extraordinary threat)",
+      "severe" =>   "🟠 Severe (Significant threat)",
+    "moderate" =>   "🟡 Moderate (Possible threat)",
+       "minor" =>   "🔵 Minor (Minimal or no known threat)",
+             _ => r#"¯\_ (ツ)_/¯"#
+  })
+
 }

@@ -55,7 +55,10 @@ struct Args {
 
   // language
   #[clap(long, default_value_t = String::from("en"))]
-  lang: String
+  lang: String,
+
+  #[clap(long, default_value_t = String::from("US"))]
+  iso2c: String,
   
 }
 
@@ -123,6 +126,7 @@ fn get_weatherkit_weather(token: String,
                           latitude: String,
                           longitude: String, 
                           language: String, 
+                          iso2c: String,
                           tzone: String, 
                           utc_now: DateTime<Utc>) -> 
                           weatherkitweather::WeatherKitWeather {
@@ -130,8 +134,8 @@ fn get_weatherkit_weather(token: String,
   let utc_now_fmt = utc_now.to_rfc3339_opts(SecondsFormat::Secs, true);
 
   let url = format!(
-    "https://weatherkit.apple.com/api/v1/weather/{}/{}/{}?timezone={}&dataSets=currentWeather,forecastDaily,forecastHourly,weatherAlerts&dailyStart={}&hourlyStart={}", 
-    language, latitude, longitude, tzone, utc_now_fmt, utc_now_fmt
+    "https://weatherkit.apple.com/api/v1/weather/{}/{}/{}?timezone={}&country={}&countryCode={}&dataSets=currentWeather,forecastDaily,forecastHourly,weatherAlerts&dailyStart={}&hourlyStart={}", 
+    language, latitude, longitude, iso2c, iso2c, tzone, utc_now_fmt, utc_now_fmt
   );
   
   let client = reqwest::blocking::Client::new();
@@ -159,6 +163,8 @@ fn main() {
 
   let args = Args::parse();
 
+  let iso2c: String = args.iso2c;
+
   let lat = args.lat;
   let lon = args.lon;
   
@@ -169,7 +175,7 @@ fn main() {
 
   let utc_now = Utc::now();
 
-  let resp = get_weatherkit_weather(token, lat.to_owned(), lon.to_owned(), args.lang, tzone, utc_now);
+  let resp = get_weatherkit_weather(token, lat.to_owned(), lon.to_owned(), args.lang, iso2c, tzone, utc_now);
   
   let num = NumberFormat::new();
 
@@ -299,6 +305,30 @@ fn main() {
   }
 
   println!();
+
+  match resp.weather_alerts {
+    Some(alerts) => {
+
+      let alerts = alerts.alerts;
+      let num_alerts = alerts.len();
+      let is_are = if num_alerts == 1 { "IS" } else { "ARE" };
+      let s = if num_alerts == 1 { "" } else { "S" };
+
+      println!("🚨 THERE {} {} ACTIVE WEATHER ALERT{}\n",is_are, num_alerts, s);
+
+      for alert in alerts {
+
+        println!("     Area: {}", alert.area_name);
+        println!("     Kind: {}", alert.description);
+        println!(" Severity: {}", severity_trans(alert.severity));
+        println!("  Expires: {}", alert.expire_time);
+        println!("More info: {}", alert.details_url);
+
+        println!();
+      }
+    },
+    None => {}
+  }
 
   println!("{}", resp.current_weather.metadata.attribution_url); // Attribution labeling required by Apple
   
