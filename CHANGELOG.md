@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.3...v0.3.0) (2022-07-31)
+
+
+### Features
+
+* Weather alerts! ([e47bfbe](https://github.com/hrbrmstr/weatherkit-rust/commit/e47bfbe3c207ddc99ab76a29dffad96a965e2ffb))
+* Weather alerts! ([b690eb6](https://github.com/hrbrmstr/weatherkit-rust/commit/b690eb6d6bff8c252cd53818c4a3f2d7e9a02b36))
+
 ## [0.2.3](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.2...v0.2.3) (2022-07-20)
 
 
