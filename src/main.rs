@@ -306,28 +306,28 @@ fn main() {
 
   println!();
 
-  match resp.weather_alerts {
-    Some(alerts) => {
+  if let Some(alerts) = resp.weather_alerts {
 
       let alerts = alerts.alerts;
       let num_alerts = alerts.len();
-      let is_are = if num_alerts == 1 { "IS" } else { "ARE" };
-      let s = if num_alerts == 1 { "" } else { "S" };
 
-      println!("🚨 THERE {} {} ACTIVE WEATHER ALERT{}\n",is_are, num_alerts, s);
+      if num_alerts > 0 {
+        let is_are = if num_alerts == 1 { "IS" } else { "ARE" };
+        let s = if num_alerts == 1 { "" } else { "S" };
 
-      for alert in alerts {
+        println!("🚨 THERE {} {} ACTIVE WEATHER ALERT{}\n",is_are, num_alerts, s);
 
-        println!("     Area: {}", alert.area_name);
-        println!("     Kind: {}", alert.description);
-        println!(" Severity: {}", severity_trans(alert.severity));
-        println!("  Expires: {}", alert.expire_time);
-        println!("More info: {}", alert.details_url);
+        for alert in alerts {
 
-        println!();
+          println!("     Area: {}", alert.area_name);
+          println!("     Kind: {}", alert.description);
+          println!(" Severity: {}", severity_trans(alert.severity));
+          println!("  Expires: {}", alert.expire_time);
+          println!("More info: {}", alert.details_url);
+
+          println!();
+        }
       }
-    },
-    None => {}
   }
 
   println!("{}", resp.current_weather.metadata.attribution_url); // Attribution labeling required by Apple

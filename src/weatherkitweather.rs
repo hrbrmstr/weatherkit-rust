@@ -684,7 +684,7 @@ pub struct Alert {
     pub precedence: i64,
 
     #[serde(rename = "severity")]
-    pub severity: String,
+    pub severity: Severity,
 
     #[serde(rename = "source")]
     pub source: String,
@@ -705,15 +705,34 @@ pub struct Alert {
     pub responses: Vec<Option<serde_json::Value>>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub enum Severity {
+  #[serde(rename="extreme")]
+  Extreme,
 
-pub fn severity_trans(severity: String) -> String {
+  #[serde(rename="severe")]
+  Severe,
+  
+  #[serde(rename="moderate")]
+  Moderate,
+  
+  #[serde(rename="minor")]
+  Minor,
+  
+  #[serde(rename="unknown")]
+  Unknown,
+  
+}
 
-  String::from(match severity.as_str() {
-     "extreme" =>   "🔴 Extreme (Extraordinary threat)",
-      "severe" =>   "🟠 Severe (Significant threat)",
-    "moderate" =>   "🟡 Moderate (Possible threat)",
-       "minor" =>   "🔵 Minor (Minimal or no known threat)",
-             _ => r#"¯\_ (ツ)_/¯"#
+
+pub fn severity_trans(severity: Severity) -> String {
+
+  String::from(match severity {
+     Severity::Extreme => "🔴 Extreme (Extraordinary threat)",
+      Severity::Severe => "🟠 Severe (Significant threat)",
+    Severity::Moderate => "🟡 Moderate (Possible threat)",
+       Severity::Minor => "🔵 Minor (Minimal or no known threat)",
+     Severity::Unknown => r#"¯\_ (ツ)_/¯"#
   })
 
 }
