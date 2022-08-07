@@ -1637,7 +1637,7 @@ checksum = "6a89911bd99e5f3659ec4acf9c4d93b0a90fe4a2a11f15328472058edc5261be"
 
 [[package]]
 name = "weatherkit"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "app_dirs2",
  "chrono",

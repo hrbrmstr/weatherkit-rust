@@ -135,7 +135,7 @@ fn get_weatherkit_weather(token: String,
 
   let url = format!(
     "https://weatherkit.apple.com/api/v1/weather/{}/{}/{}?timezone={}&country={}&countryCode={}&dataSets=currentWeather,forecastDaily,forecastHourly,weatherAlerts&dailyStart={}&hourlyStart={}", 
-    language, latitude, longitude, iso2c, iso2c, tzone, utc_now_fmt, utc_now_fmt
+    language, latitude, longitude, tzone, iso2c, iso2c, utc_now_fmt, utc_now_fmt
   );
   
   let client = reqwest::blocking::Client::new();
