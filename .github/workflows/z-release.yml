@@ -48,6 +48,6 @@ jobs:
         uses: rust-build/rust-build.action@master
         with:
           RUSTTARGET: ${{ matrix.target }}
-          UPLOAD_MODE: none
+          UPLOAD_MODE: release
       - name: Checkout output
-        run: ls -laR
+        run: ls -lR
