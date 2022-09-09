@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherKitWeather {
   #[serde(rename = "currentWeather")]
-  pub current_weather: CurrentWeather,
+  pub current_weather: Option<CurrentWeather>,
   
   #[serde(rename = "forecastDaily")]
   pub forecast_daily: ForecastDaily,

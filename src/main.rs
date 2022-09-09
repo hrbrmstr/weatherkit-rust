@@ -179,23 +179,27 @@ fn main() {
   
   let num = NumberFormat::new();
 
-  let as_of_time = DateTime::parse_from_rfc3339(resp.current_weather.as_of.as_str()).unwrap().with_timezone(&tz);
-  
-  // Attribution labeling required by Apple
-  // println!("{} daily forecast for ({}, {}) as of {}\n", APPLE_WEATHER_TRADEMARK, resp.current_weather.metadata.latitude, resp.current_weather.metadata.longitude, as_of_time);
-  println!("{} daily forecast for {} as of {}\n", APPLE_WEATHER_TRADEMARK, place, as_of_time);
-  
-  // TODO metric option for everything that's displayed
+  if let Some(ref current_wx) = resp.current_weather {
 
-  println!(" Conditions: {}",         format!("{}", condition_code(&resp.current_weather.condition_code)));
-  println!("Temperature: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature)));
-  println!(" Feels like: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_apparent)));
-  println!("  Dew Point: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
-  println!("       Wind: {} mph",     num.format(".0f", kmph_to_mph(resp.current_weather.wind_speed)));
-  println!("   Pressure: {} mb ({})", num.format(".0f", resp.current_weather.pressure), format!("{:?}", resp.current_weather.pressure_trend));
-  println!(" Visibility: {} miles",   meters_to_miles(resp.current_weather.visibility) as i64);
-  println!("   UV Index: {} {}",      uv_label(resp.current_weather.uv_index, true), uv_label(resp.current_weather.uv_index, false));
-  println!();
+    let as_of_time = DateTime::parse_from_rfc3339(current_wx.as_of.as_str()).unwrap().with_timezone(&tz);
+    
+    // Attribution labeling required by Apple
+    // println!("{} daily forecast for ({}, {}) as of {}\n", APPLE_WEATHER_TRADEMARK, resp.current_weather.metadata.latitude, resp.current_weather.metadata.longitude, as_of_time);
+    println!("{} daily forecast for {} as of {}\n", APPLE_WEATHER_TRADEMARK, place, as_of_time);
+    
+    // TODO metric option for everything that's displayed
+
+    println!(" Conditions: {}",         format!("{}", condition_code(&current_wx.condition_code)));
+    println!("Temperature: {}°F",       num.format(".1f", c_to_f(current_wx.temperature)));
+    println!(" Feels like: {}°F",       num.format(".1f", c_to_f(current_wx.temperature_apparent)));
+    println!("  Dew Point: {}°F",       num.format(".1f", c_to_f(current_wx.temperature_dew_point)));
+    println!("       Wind: {} mph",     num.format(".0f", kmph_to_mph(current_wx.wind_speed)));
+    println!("   Pressure: {} mb ({})", num.format(".0f", current_wx.pressure), format!("{:?}", current_wx.pressure_trend));
+    println!(" Visibility: {} miles",   meters_to_miles(current_wx.visibility) as i64);
+    println!("   UV Index: {} {}",      uv_label(current_wx.uv_index, true), uv_label(current_wx.uv_index, false));
+    println!();
+
+  }
 
   let hrs = resp.forecast_hourly.hours;
   
@@ -330,6 +334,8 @@ fn main() {
       }
   }
 
-  println!("{}", resp.current_weather.metadata.attribution_url); // Attribution labeling required by Apple
+  if let Some(current_wx) = resp.current_weather {
+    println!("{}", current_wx.metadata.attribution_url); // Attribution labeling required by Apple
+  }
   
 }
