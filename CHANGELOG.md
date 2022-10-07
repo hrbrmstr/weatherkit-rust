@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.3.0...v0.3.1) (2022-10-07)
+
+
+### Bug Fixes
+
+* Apple's API borked today so I added two Some() checks; prbly need to add more. ([e669e70](https://github.com/hrbrmstr/weatherkit-rust/commit/e669e70e30e9a71dd54893bd4ccc69fa5328583b))
+
 ## [0.3.0](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.3...v0.3.0) (2022-07-31)
 
 
