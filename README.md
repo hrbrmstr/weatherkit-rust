@@ -41,6 +41,12 @@ cargo build --release
 
 ## Installing
 
+Homebrew users can do:
+
+```bash
+brew install hrbrmstr/tap/weatherkit
+```
+
 The following will put:
 
 - `weatherkit`
