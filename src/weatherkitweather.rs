@@ -569,17 +569,19 @@ pub fn pressure_trend(trend: &PressureTrend) -> String {
   
 }
 
+// convert precip type to an emoji
 pub fn precip_type(precip: &PrecipitationType, daylight: bool) -> String {
   
   String::from(match precip {
     PrecipitationType::Hail => "🧊",
     PrecipitationType::Mixed => "🌂",
     PrecipitationType::Sleet => "⛆",
-    PrecipitationType::Snow => "❄️",
+    PrecipitationType::Snow => "❄️ ",
     _ => if daylight { "😎" } else { "🌕" }
   })
   
 }
+
 
 pub fn condition_code(cond: &ConditionCode) -> String {
   

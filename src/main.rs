@@ -13,7 +13,7 @@ use serde_json::json;
 use jsonwebtokens as jwt;
 use jwt::{Algorithm, AlgorithmID, encode};
 
-use tz_search::{lookup};
+use tz_search::lookup;
 
 use format_num::NumberFormat;
 
@@ -26,7 +26,7 @@ use chrono_tz::Tz;
 extern crate colored;
 use colored::{*};
 
-use clap::{Parser};
+use clap::Parser;
 
 mod weatherkitweather;
 use weatherkitweather::{*};
@@ -39,18 +39,18 @@ use utils::{*};
 
 /// Mandatory Apple Weather trademark. The Apple glyph is a pain
 /// to type so this makes it a bit easier to handle
-const APPLE_WEATHER_TRADEMARK: &'static str = " Weather";
+const APPLE_WEATHER_TRADEMARK: &str = " Weather";
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
 
   // latitude
-  #[clap(long, default_value_t = String::from("43.2683199"))]
+  #[clap(long, allow_hyphen_values = true, default_value_t = String::from("43.2683199"))]
   lat: String,
 
   // longitude
-  #[clap(long, default_value_t = String::from("-70.8635506"))]
+  #[clap(long, allow_hyphen_values = true, default_value_t = String::from("-70.8635506"))]
   lon: String,
 
   // language
@@ -96,19 +96,19 @@ fn setup_jwt() -> String {
   let expires = now + 3600;
   
   let claims = json!({
-    "iss": wxkit_teamid.to_owned(),
+    "iss": wxkit_teamid,
     "iat": now,
     "exp": expires,
-    "sub": wxkit_service_id.to_owned()
+    "sub": wxkit_service_id
   });
   
   let header = json!({
     "alg": "ES256",
-    "kid": wxkit_keyid.to_owned(),
-    "id": format!("{}.{}", wxkit_teamid.to_owned(), wxkit_service_id.to_owned())
+    "kid": wxkit_keyid,
+    "id": format!("{}.{}", wxkit_teamid, wxkit_service_id)
   });
   
-  return encode(&header, &claims, &alg).expect("Error creating JWT");
+  encode(&header, &claims, &alg).expect("Error creating JWT")
 
 }
 
@@ -140,15 +140,15 @@ fn get_weatherkit_weather(token: String,
   
   let client = reqwest::blocking::Client::new();
   
-  let resp = client
+  
+  
+  client
     .get(url)
     .header("Authorization", format!("Bearer {}", token))
     .header("Accept", "application/json")
     .send().expect("Error retrieving weather from WeatherKit REST API")
     .json::<WeatherKitWeather>()
-    .expect("Error retrieving weather info.");
-  
-  return resp;
+    .expect("Error retrieving weather info.")
 
 }
 
@@ -175,7 +175,7 @@ fn main() {
 
   let utc_now = Utc::now();
 
-  let resp = get_weatherkit_weather(token, lat.to_owned(), lon.to_owned(), args.lang, iso2c, tzone, utc_now);
+  let resp = get_weatherkit_weather(token, lat, lon, args.lang, iso2c, tzone, utc_now);
   
   let num = NumberFormat::new();
 
@@ -187,13 +187,13 @@ fn main() {
   
   // TODO metric option for everything that's displayed
 
-  println!(" Conditions: {}",         format!("{}", condition_code(&resp.current_weather.condition_code)));
+  println!(" Conditions: {}",         format_args!("{}", condition_code(&resp.current_weather.condition_code)));
   println!("Temperature: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature)));
   println!(" Feels like: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_apparent)));
   println!("  Dew Point: {}°F",       num.format(".1f", c_to_f(resp.current_weather.temperature_dew_point)));
   println!("       Wind: {} mph",     num.format(".0f", kmph_to_mph(resp.current_weather.wind_speed)));
-  println!("   Pressure: {} mb ({})", num.format(".0f", resp.current_weather.pressure), format!("{:?}", resp.current_weather.pressure_trend));
-  println!(" Visibility: {} miles",   meters_to_miles(resp.current_weather.visibility) as i64);
+  println!("   Pressure: {} mb ({})", num.format(".0f", resp.current_weather.pressure), format_args!("{:?}", resp.current_weather.pressure_trend));
+  println!(" Visibility: {} miles",   meters_to_miles(resp.current_weather.visibility));
   println!("   UV Index: {} {}",      uv_label(resp.current_weather.uv_index, true), uv_label(resp.current_weather.uv_index, false));
   println!();
 
@@ -239,7 +239,7 @@ fn main() {
         Some(trend) => pressure_trend(trend),
         None => " ".to_string()
       },
-      precip_type(&hour.precipitation_type, match hour.daylight { Some(dl) => dl, None => true }),
+      precip_type(&hour.precipitation_type, hour.daylight.unwrap_or(true)),
       condition_code(&hour.condition_code).pad_to_width(max_hr_condiiton_len),
       uv_label(hour.uv_index, true)
     );

@@ -6,7 +6,7 @@ license = "MIT"
 homepage = "https://github.com/hrbrmstr/weatherkit-rust"
 repository = "https://github.com/hrbrmstr/weatherkit-rust"
 keywords = [ "darksky", "weather", "weatherkit" ]
-version = "0.3.2"
+version = "0.3.3"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -22,10 +22,10 @@ tz-search = "0.1"
 format_num = "0.1.0"
 pad = "0.1.6"
 chrono = "0.4.19"
-chrono-tz = "0.6.1"
+chrono-tz = "0.8.3"
 colored = "2"
-clap = { version = "3.1.18", features = ["derive"] }
+clap = { version = "4.3.23", features = ["derive"] }
 app_dirs2 = "2.5.0"
-pickledb = "*"
+pickledb = "0.5.1"
 log = "0.4"
-simple_logger = "*"
+simple_logger = "4.2.0"

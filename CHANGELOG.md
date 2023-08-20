@@ -1,4 +1,12 @@
+
 # Changelog
+
+## 0.3.3
+
+### Features
+
+it's kind of actually usable now? fixed the problem with using negative values on the cli
+
 
 ## [0.3.0](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.2.3...v0.3.0) (2022-07-31)
 

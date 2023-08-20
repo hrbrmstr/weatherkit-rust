@@ -29,7 +29,7 @@ fn lookup_placename(lat: f64,
   let builder =  reqwest::blocking::ClientBuilder::new();
   let client = builder.connection_verbose(true).build().expect("Could not build client");
   
-  let bdy = format!("{{ \"lat\": {}, \"lng\": {} }}", lat, lng).to_string();
+  let bdy = format!("{{ \"lat\": {}, \"lng\": {} }}", lat, lng);
   let resp = client
     .post(url)
     .body(bdy)
@@ -46,14 +46,14 @@ fn lookup_placename(lat: f64,
       match placename {
         Ok(pn) => return pn,
         Err(_) => return PlaceName {
-          place_name:  format!("({}, {})", lat, lng).to_string(),
+          place_name:  format!("({}, {})", lat, lng),
           dms_lat: lat.to_string(),
           dms_lng: lng.to_string()
         }
       };
     },
     Err(_) => return PlaceName {
-      place_name: format!("({}, {})", lat, lng).to_string(),
+      place_name: format!("({}, {})", lat, lng),
       dms_lat: lat.to_string(),
       dms_lng: lng.to_string()
     }
@@ -79,7 +79,7 @@ struct Place {
 /// This value is cached to prevent wasting CPU/bandwidth of latlon.top
 pub fn get_placename(lat: f64, lon: f64) -> String {
 
-  let ll_key = format!("{};{}", lat, lon).to_string();
+  let ll_key = format!("{};{}", lat, lon);
 
   let app_dir = get_app_dir(AppDataType::UserCache, &WEATHERKIT_APP_INFO, "").expect("Error finding application cache directory.");
 
