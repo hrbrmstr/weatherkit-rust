@@ -1,5 +1,11 @@
-
 # Changelog
+
+## [0.3.1](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.3.0...v0.3.1) (2023-08-20)
+
+
+### Bug Fixes
+
+* negative numbers ([457f82e](https://github.com/hrbrmstr/weatherkit-rust/commit/457f82e8f540afa4f7adb29e40e974e3b411d18f))
 
 ## 0.3.3
 
