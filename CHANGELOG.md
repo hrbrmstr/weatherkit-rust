@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.4
+
+* clean up rust-analyzer warnings and update all dependencies
+
+## 0.3.3
+
+* negative numbers ([457f82e](https://github.com/hrbrmstr/weatherkit-rust/commit/457f82e8f540afa4f7adb29e40e974e3b411d18f))
+
 ## 0.3.1
 
 - fix negative values in cmdline values
@@ -8,10 +16,6 @@
 
 
 ### Bug Fixes
-
-* negative numbers ([457f82e](https://github.com/hrbrmstr/weatherkit-rust/commit/457f82e8f540afa4f7adb29e40e974e3b411d18f))
-
-## 0.3.3
 
 ### Features
 

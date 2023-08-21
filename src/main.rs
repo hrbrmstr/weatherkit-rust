@@ -219,14 +219,15 @@ fn main() {
   // keep track of day's we've seen & printed so we don't print them more than once
   let mut day_set: HashSet<String> = HashSet::new();
 
-  for idx in 0..hrs[0..23].len() {
+  // for idx in 0..hrs[0..23].len() {
+  for hr in hrs {
 
-    let hour = &hrs[idx];
+    let hour = hr;
   
     let utc_fcast_time = DateTime::parse_from_rfc3339(hour.forecast_start.as_str()).unwrap();
     let local_time = utc_fcast_time.with_timezone(&tz);
     let weekday = format!("{}", local_time.weekday()).pad_to_width_with_alignment(5, Alignment::Right);
-    let printed_str = if local_time.date() == utc_now.date() { "Today" } else { weekday.as_str() };
+    let printed_str = if local_time.date_naive() == utc_now.date_naive() { "Today" } else { weekday.as_str() };
     
         println!(
       "{} @ {}:00 │ 🌡  {}°F │ 💦 {}% │ {} mb {} │ {} │ {} │ {}",
@@ -267,14 +268,14 @@ fn main() {
 
   let block = "▆";
 
-  for idx in 0..days.len() {
+  for d in days {
 
-    let day = &days[idx];
+    let day = d;
 
     let utc_fcast_time = DateTime::parse_from_rfc3339(day.forecast_start.as_str()).unwrap();
     let local_time = utc_fcast_time.with_timezone(&tz);
     let weekday = format!("{}", local_time.weekday()).pad_to_width_with_alignment(5, Alignment::Right);
-    let weekday_str = if local_time.date() == utc_now.date() { "Today" } else { weekday.as_str() };
+    let weekday_str = if local_time.date_naive() == utc_now.date_naive() { "Today" } else { weekday.as_str() };
 
     let day_min = c_to_f(day.temperature_min) as i32; // num.format doesn't like i64
     let day_max = c_to_f(day.temperature_max) as i32;

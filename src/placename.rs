@@ -1,3 +1,4 @@
+#![allow(clippy::needless_return)]
 use std::fs;
 use serde::{Serialize, Deserialize};
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
@@ -50,7 +51,7 @@ fn lookup_placename(lat: f64,
           dms_lat: lat.to_string(),
           dms_lng: lng.to_string()
         }
-      };
+      }
     },
     Err(_) => return PlaceName {
       place_name: format!("({}, {})", lat, lng),
@@ -124,7 +125,7 @@ pub fn get_placename(lat: f64, lon: f64) -> String {
 
   }
 
-  if !place.contains("(") {
+  if !place.contains('(') {
     let split = place.split(", ");
     let place_parts: Vec<&str> = split.collect();
     let len = place_parts.len();
