@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- fix negative values in cmdline values
+
 ## [0.3.1](https://github.com/hrbrmstr/weatherkit-rust/compare/v0.3.0...v0.3.1) (2023-08-21)
 
 
