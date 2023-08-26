@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["c_to_f","Convert Celsius to Fahrenheit"],["kmph_to_mph","Convert kilometers per hour to miles per hour"],["meters_to_miles","Convert meters to miles"],["rescale_val","Rescale a given integer value from one range to another"]]};
